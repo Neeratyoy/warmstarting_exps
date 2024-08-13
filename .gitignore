@@ -1,0 +1,16 @@
+# file directories
+
+*results*/
+*data*/
+*ouptut*/
+*log*/
+*testing*/
+
+# file extensions
+
+*.pkl
+*.pt
+*.pth
+*.parquet.gzip
+*.csv
+*.json

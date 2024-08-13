@@ -1,0 +1,181 @@
+# This is a base shape file encoded in yaml
+# - `null` indicates a dimension is "finite", i.e. a non-"width" dimension
+# - a number indicates the base dimension of an "infinite" dimension, i.e. some notion of "width"
+lm_head.weight:
+- null
+- 240
+transformer.h.0.attn.attn.bias:
+- 720
+transformer.h.0.attn.attn.weight:
+- 720
+- 240
+transformer.h.0.attn.proj.bias:
+- 240
+transformer.h.0.attn.proj.weight:
+- 240
+- 240
+transformer.h.0.mlp.fc.bias:
+- 960
+transformer.h.0.mlp.fc.weight:
+- 960
+- 240
+transformer.h.0.mlp.proj.bias:
+- 240
+transformer.h.0.mlp.proj.weight:
+- 240
+- 960
+transformer.h.0.norm_1.bias:
+- 240
+transformer.h.0.norm_1.weight:
+- 240
+transformer.h.0.norm_2.bias:
+- 240
+transformer.h.0.norm_2.weight:
+- 240
+transformer.h.1.attn.attn.bias:
+- 720
+transformer.h.1.attn.attn.weight:
+- 720
+- 240
+transformer.h.1.attn.proj.bias:
+- 240
+transformer.h.1.attn.proj.weight:
+- 240
+- 240
+transformer.h.1.mlp.fc.bias:
+- 960
+transformer.h.1.mlp.fc.weight:
+- 960
+- 240
+transformer.h.1.mlp.proj.bias:
+- 240
+transformer.h.1.mlp.proj.weight:
+- 240
+- 960
+transformer.h.1.norm_1.bias:
+- 240
+transformer.h.1.norm_1.weight:
+- 240
+transformer.h.1.norm_2.bias:
+- 240
+transformer.h.1.norm_2.weight:
+- 240
+transformer.h.2.attn.attn.bias:
+- 720
+transformer.h.2.attn.attn.weight:
+- 720
+- 240
+transformer.h.2.attn.proj.bias:
+- 240
+transformer.h.2.attn.proj.weight:
+- 240
+- 240
+transformer.h.2.mlp.fc.bias:
+- 960
+transformer.h.2.mlp.fc.weight:
+- 960
+- 240
+transformer.h.2.mlp.proj.bias:
+- 240
+transformer.h.2.mlp.proj.weight:
+- 240
+- 960
+transformer.h.2.norm_1.bias:
+- 240
+transformer.h.2.norm_1.weight:
+- 240
+transformer.h.2.norm_2.bias:
+- 240
+transformer.h.2.norm_2.weight:
+- 240
+transformer.h.3.attn.attn.bias:
+- 720
+transformer.h.3.attn.attn.weight:
+- 720
+- 240
+transformer.h.3.attn.proj.bias:
+- 240
+transformer.h.3.attn.proj.weight:
+- 240
+- 240
+transformer.h.3.mlp.fc.bias:
+- 960
+transformer.h.3.mlp.fc.weight:
+- 960
+- 240
+transformer.h.3.mlp.proj.bias:
+- 240
+transformer.h.3.mlp.proj.weight:
+- 240
+- 960
+transformer.h.3.norm_1.bias:
+- 240
+transformer.h.3.norm_1.weight:
+- 240
+transformer.h.3.norm_2.bias:
+- 240
+transformer.h.3.norm_2.weight:
+- 240
+transformer.h.4.attn.attn.bias:
+- 720
+transformer.h.4.attn.attn.weight:
+- 720
+- 240
+transformer.h.4.attn.proj.bias:
+- 240
+transformer.h.4.attn.proj.weight:
+- 240
+- 240
+transformer.h.4.mlp.fc.bias:
+- 960
+transformer.h.4.mlp.fc.weight:
+- 960
+- 240
+transformer.h.4.mlp.proj.bias:
+- 240
+transformer.h.4.mlp.proj.weight:
+- 240
+- 960
+transformer.h.4.norm_1.bias:
+- 240
+transformer.h.4.norm_1.weight:
+- 240
+transformer.h.4.norm_2.bias:
+- 240
+transformer.h.4.norm_2.weight:
+- 240
+transformer.h.5.attn.attn.bias:
+- 720
+transformer.h.5.attn.attn.weight:
+- 720
+- 240
+transformer.h.5.attn.proj.bias:
+- 240
+transformer.h.5.attn.proj.weight:
+- 240
+- 240
+transformer.h.5.mlp.fc.bias:
+- 960
+transformer.h.5.mlp.fc.weight:
+- 960
+- 240
+transformer.h.5.mlp.proj.bias:
+- 240
+transformer.h.5.mlp.proj.weight:
+- 240
+- 960
+transformer.h.5.norm_1.bias:
+- 240
+transformer.h.5.norm_1.weight:
+- 240
+transformer.h.5.norm_2.bias:
+- 240
+transformer.h.5.norm_2.weight:
+- 240
+transformer.ln_f.bias:
+- 240
+transformer.ln_f.weight:
+- 240
+transformer.wte.weight:
+- null
+- 240

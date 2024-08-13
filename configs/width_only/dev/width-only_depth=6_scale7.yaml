@@ -1,0 +1,9 @@
+bias: true
+block_size: 1024
+n_embd: 384  # scale6
+n_head: 12  # scale6
+# head_size = n_embd // n_head = 320 // 8 = 40
+n_layer: 6  
+n_query_groups: null
+norm_class_name: LayerNorm
+vocab_size: 50257

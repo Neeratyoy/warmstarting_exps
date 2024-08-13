@@ -1,0 +1,64 @@
+block_size: 1024
+model_config_path: null
+model_config:
+  bias: true
+  block_size: 1024
+  n_embd: 96
+  n_head: 6
+  n_layer: 6
+  norm_class_name: LayerNorm
+  vocab_size: 50257
+
+mup_base_scales: null
+mup_base_shape_path: /work/dlclarge1/mallik-scaling/scaling_exps/configs/width_only/dev/mup/width-only_depth=6_scale0.bsh
+
+torch_scheduler: null
+torch_scheduler_args: null
+max_lr: 0.01
+min_lr: 0
+adam_beta_1: 0.9
+adam_beta_2: 0.95
+adam_eps: 1.0e-08
+warmup_fraction: null
+cooldown_fraction: null
+cooldown_type: linear
+
+independent_wd: false
+weight_decay: 0
+weight_init_type: null
+z_loss_eps: null
+
+devices: 1
+micro_batch_size: 8
+accumulation_iters: 1
+
+clip_max_norm: null
+clip_max_val: null
+
+global_log_step: 1
+tracked_metrics:
+  gradient_norm_per_layer: 5
+  learning_rate: 5
+  max_attention_logits_all: 5
+  max_attention_logits_per_layer: 5
+  optimizer_stats: 5
+  output_logits_max: 5
+  output_logits_mean: 5
+  total_gradient_norm: 5
+  train_loss: 1
+  validation_loss: 1
+  weight_spectra_diff: 50
+  weight_spectra_max: 50
+  z_loss: 5
+
+max_tokens: null
+tokens_per_param: 20
+max_train_steps: null
+max_val_steps: 10
+validate_every: 5
+
+overwrite_state: false
+load_state_path: null
+save_state_every: 5
+save_state_path: null
+seed: 444
