@@ -13,7 +13,7 @@ for jobname in scale_width_base \
                scale_compound_target2
 do
     jobID=$(
-        sbatch /work/dlclarge1/mallik-scaling/scaling_exps/meta/scripts/run_slurm.sh ${jobname} <<< y \
+        sbatch /work/dlclarge1/mallik-warmstarting/warmstarting_exps/meta/scripts/run_slurm.sh ${jobname} <<< y \
         | awk '{print $4}'
     )
     echo $jobname": "$jobID

@@ -3,14 +3,14 @@ model_config_path: null
 model_config:
   bias: true
   block_size: 1024
-  n_embd: 96
-  n_head: 6
+  n_embd: 48
+  n_head: 2
   n_layer: 6
   norm_class_name: LayerNorm
   vocab_size: 50257
 
 mup_base_scales: null
-mup_base_shape_path: /work/dlclarge1/mallik-scaling/scaling_exps/configs/width_only/dev/mup/width-only_depth=6_scale0.bsh
+mup_base_shape_path: /work/dlclarge1/mallik-warmstarting/warmstarting_exps/configs/width_only/dev/mup/width-only_block=1024_depth=6_scale0.bsh
 
 torch_scheduler: null
 torch_scheduler_args: null
@@ -23,7 +23,7 @@ warmup_fraction: null
 cooldown_fraction: null
 cooldown_type: linear
 
-independent_wd: false
+independent_wd: true
 weight_decay: 0
 weight_init_type: null
 z_loss_eps: null
@@ -57,7 +57,7 @@ max_train_steps: null
 max_val_steps: 10
 validate_every: 5
 
-overwrite_state: false
+overwrite_state: true  # BE CAREFUL OF THIS FLAG
 load_state_path: null
 save_state_every: 5
 save_state_path: null

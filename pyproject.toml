@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "warms"
+version = "0.1.0"
+description = "Experiment repository for LLM scaling and HPO studies"
+authors = [
+    "Neeratyoy Mallik <mallik@cs.uni-freiburg.de>",
+    "Maciej Janowski <janowski@cs.uni-freiburg.de>",
+    "Johannes Hog <hogj@cs.uni-freiburg.de>",
+    "Herilalaina Rakotoarison <rakotoah@cs.uni-freiburg.de>",
+]
+license = "MIT"
+readme = "README.md"
+packages = [
+    { include = "warms" },
+]
+
+[tool.poetry.dependencies]
+python = "^3.9, <3.12"
+# Poetry insists on this https://github.com/python-poetry/poetry/issues/8823
+numpy = "^1.0"  # to prevent 2.0 from being installed
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
