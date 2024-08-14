@@ -3,8 +3,8 @@ model_config_path: null
 model_config:
   bias: true
   block_size: 1024
-  n_embd: 96
-  n_head: 6
+  n_embd: 48  # scale0
+  n_head: 4  # scale0
   n_layer: 6
   norm_class_name: LayerNorm
   vocab_size: 50257
