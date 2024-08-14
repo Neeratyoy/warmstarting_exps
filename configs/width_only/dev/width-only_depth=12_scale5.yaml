@@ -1,8 +1,8 @@
 bias: true
 block_size: 1024
-n_embd: 384  # scale0
-n_head: 16  # scale0
-# head_size = n_embd // n_head = 384 // 16 = 24
+n_embd: 512  # scale5
+n_head: 16  # scale5
+# head_size = n_embd // n_head = 512 // 16 = 32
 n_layer: 12  
 n_query_groups: null
 norm_class_name: LayerNorm

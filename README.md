@@ -50,7 +50,7 @@ cd scale_and_warmstart/
 python examples/run_configs.py \
     --data_config_path ../warmstarting_exps/configs/wikitext_data_handler.yaml \
     --train_config_path ../warmstarting_exps/configs/train_template.yaml \
-    --output_dir results/test_run
+    --output_dir ../warmstarting_exps/results/test_run
 ```
 
 **NOTE**: This example is the atomic run that should not break with any commit

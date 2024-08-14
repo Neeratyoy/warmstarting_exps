@@ -18,6 +18,7 @@ def get_args():
     parser = argparse.ArgumentParser(description="Parser for generating MuP base files")
 
     parser.add_argument("--depth", type=int, default=6, help="n_layer choice")
+    parser.add_argument("--block", type=int, default=1024, help="block_size choice")
 
     return parser.parse_args()
 
@@ -29,7 +30,7 @@ if __name__ == "__main__":
     # check `scaling_exps/configs/width_only/` to make sense of upper index of scale available
     scale_map = {
         6: list(range(0, 9)),
-        12: list(range(0, 5)),
+        12: list(range(0, 6)),
     }
     
     scale_index = scale_map[args.depth]
@@ -38,10 +39,10 @@ if __name__ == "__main__":
         if len(_scale_index):
             print(base, _scale_index[0])
             quicker(
-                Path("/work/dlclarge1/mallik-scaling/scaling_exps/configs/width_only/dev"),
+                Path("/work/dlclarge1/mallik-warmstarting/warmstarting_exps/configs/width_only/dev"),
                 base,
                 _scale_index[0],
                 depth=args.depth,
-                prefix=f"width-only_depth={args.depth}"
+                prefix=f"width-only_block={args.block}_depth={args.depth}"
             )
         print()
