@@ -2,7 +2,7 @@ import argparse
 from litgpt.config import Config
 from pathlib import Path
 
-from scales.utils import get_mup_shape_base
+from saws.utils import get_mup_shape_base
 
 
 def quicker(base_path: Path, base: int, target: int, depth: int = 6, prefix: str = "width-only"):
