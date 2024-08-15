@@ -40,7 +40,7 @@ python -c "import saws"
 ### Quick run
 
 ```bash
-cd warmstarting_exps/meta/scripts/
+cd warmstarting_exps/scripts/meta/
 bash simple_run_wikitext.sh
 ```
 OR
@@ -53,4 +53,20 @@ python examples/run_configs.py \
     --output_dir ../warmstarting_exps/results/test_run
 ```
 
-**NOTE**: This example is the atomic run that should not break with any commit
+### Quick run with muParam
+
+```bash
+cd warmstarting_exps/scripts/meta/
+bash simple_run_wikitext_mup.sh
+```
+OR
+```bash
+cd scale_and_warmstart/
+
+python examples/run_configs.py \
+    --data_config_path ../warmstarting_exps/configs/data_handlers/wikitext_data_handler.yaml \
+    --train_config_path ../warmstarting_exps/configs/train_template_mup.yaml \
+    --output_dir ../warmstarting_exps/results/test_run_mup
+```
+
+**NOTE**: These examples represent an atomic run that should not break with any commit
