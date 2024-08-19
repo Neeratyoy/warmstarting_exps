@@ -5,9 +5,20 @@ from pathlib import Path
 from saws.utils import get_mup_shape_base
 
 
-def quicker(base_path: Path, base: int, target: int, depth: int = 6, prefix: str = "width-only"):
-    base_config = Config.from_file(base_path / f"width-only_depth={depth}_scale{base}.yaml")
-    target_config = Config.from_file(base_path / f"width-only_depth={depth}_scale{target}.yaml")
+def quicker(
+    base_path: Path,
+    base: int,
+    target: int,
+    depth: int = 6,
+    block: int = 1024,
+    prefix: str = "width-only"
+) -> None:
+    base_config = Config.from_file(
+        base_path / f"width-only_block=1024_depth={depth}_scale{base}.yaml"
+    )
+    target_config = Config.from_file(
+        base_path / f"width-only_block=1024_depth={depth}_scale{target}.yaml"
+    )
     get_mup_shape_base(
         base_config, target_config, base_path / "mup" / f"{prefix}_scale{base}.bsh",
         verbose=True
@@ -43,6 +54,7 @@ if __name__ == "__main__":
                 base,
                 _scale_index[0],
                 depth=args.depth,
+                block=args.block,
                 prefix=f"width-only_block={args.block}_depth={args.depth}"
             )
         print()

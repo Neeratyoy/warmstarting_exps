@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "warms"
 version = "0.1.0"
-description = "Experiment repository for LLM scaling and HPO studies"
+description = "Experiment repository for warmstarting LLMs"
 authors = [
     "Neeratyoy Mallik <mallik@cs.uni-freiburg.de>",
     "Maciej Janowski <janowski@cs.uni-freiburg.de>",
