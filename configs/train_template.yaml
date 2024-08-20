@@ -57,8 +57,10 @@ max_train_steps: null
 max_val_steps: 10
 validate_every: 5
 
-overwrite_state: false  # BE CAREFUL OF THIS FLAG
-load_state_path: null
-save_state_every: 5
 save_state_path: null
+load_state_path: null
+# NOTE: when loading a checkpoint from above, the below arguments are overwritten by the checkpoint
+update_every_k: 10  # updates the checkpoints with the same name
+save_every_k: null  # saves a new checkpoint state with a step added to name
+
 seed: 444

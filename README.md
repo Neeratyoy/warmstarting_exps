@@ -34,7 +34,7 @@ pip install -e .
 cd ..
 
 # test
-python -c "import saws"
+∏
 ```
 
 ### Quick run
