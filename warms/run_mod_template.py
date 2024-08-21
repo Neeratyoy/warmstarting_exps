@@ -12,7 +12,7 @@ from warms.utils.support import prepare_data_handler_from_file
 
 BASE_PATH = Path("/work/dlclarge1/mallik-warmstarting")
 DATA_BASE_PATH = BASE_PATH / "warmstarting_exps" / "configs" / "data_handlers"
-TEMPLATE_PATH = BASE_PATH / "warmstarting_exps" / "configs" / "train_template.yaml"
+TEMPLATE_PATH = BASE_PATH / "misc" / "neeratyoy" / "code" / "warmstarting_exps" / "configs" / "train_template.yaml"
 
 
 def get_args():
@@ -40,6 +40,12 @@ def get_args():
         type=str,
         required=True,
         help="The path to the .bsh file for base muP scale"
+    )   
+    parser.add_argument(
+        "--base_lr",
+        type=float,
+        required=True,
+        help="The optimal LR at the base scale"
     )   
     parser.add_argument(
         "--mup_target",
@@ -71,6 +77,7 @@ if __name__ == "__main__":
     train_config.model_config.d_model = model_config.n_embd
     train_config.block_size = model_config.block_size
     train_config.mup_base_shape_path = Path(args.mup_base)
+    train_config.max_lr = args.base_lr  # crucial for muP to work properly
     
     # Running
     fabric = L.Fabric(devices="auto", strategy="auto")

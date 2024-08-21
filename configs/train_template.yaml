@@ -29,8 +29,8 @@ weight_init_type: null
 z_loss_eps: null
 
 devices: 1
-micro_batch_size: 4
-accumulation_iters: 2
+micro_batch_size: 1
+accumulation_iters: 8
 
 clip_max_norm: null
 clip_max_val: null
