@@ -36,6 +36,7 @@ def get_args() -> argparse.Namespace:
         "--dataset",
         type=str,
         required=True,
+        default="wikitext",
         choices=["wikitext", "slimpajama"],
         help="Dataset name to load the data configuration",
     )
@@ -43,7 +44,6 @@ def get_args() -> argparse.Namespace:
         "--train_config_path",
         type=str,
         default=None,
-        required=False,
         help="Training configuration file."
     )
     # TODO: implement the feature below,
