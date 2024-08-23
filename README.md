@@ -30,11 +30,22 @@ For **dependencies**:
 ```bash
 git clone https://github.com/automl-private/scale_and_warmstart.git
 cd scale_and_warmstart
-pip install -e .
+pip install -e .  # or `poetry install`
 cd ..
 
 # test
-∏
+python -c "import saws"
+```
+
+For **the experiment repo**:
+```bash
+git clone https://github.com/Neeratyoy/warmstarting_exps.git
+cd warmstarting_exps
+pip install -e .  # or `poetry install`
+cd ..
+
+# test
+python -c "import warms"
 ```
 
 ### Quick run
@@ -45,12 +56,9 @@ bash simple_run_wikitext.sh
 ```
 OR
 ```bash
-cd scale_and_warmstart/
+cd warmstarting_exps/
 
-python examples/run_configs.py \
-    --data_config_path ../warmstarting_exps/configs/data_handlers/wikitext_data_handler.yaml \
-    --train_config_path ../warmstarting_exps/configs/train_template.yaml \
-    --output_dir ../warmstarting_exps/results/test_run
+python warms/run_main.py --output_tree "test_run/sp"
 ```
 
 ### Quick run with muParam
@@ -61,12 +69,11 @@ bash simple_run_wikitext_mup.sh
 ```
 OR
 ```bash
-cd scale_and_warmstart/
+cd warmstarting_exps/
 
-python examples/run_configs.py \
-    --data_config_path ../warmstarting_exps/configs/data_handlers/wikitext_data_handler.yaml \
-    --train_config_path ../warmstarting_exps/configs/train_template_mup.yaml \
-    --output_dir ../warmstarting_exps/results/test_run_mup
+python warms/run_main.py \
+    --output_tree "test_run/mup" \
+    --train_config_path "configs/train_template_mup.yaml"
 ```
 
 **NOTE**: These examples represent an atomic run that should not break with any commit
