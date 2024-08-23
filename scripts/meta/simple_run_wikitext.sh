@@ -1,7 +1,15 @@
-cd /work/dlclarge1/mallik-warmstarting/misc/neeratyoy/code/scale_and_warmstart/
+#!/bin/bash
 
-python examples/run_configs.py \
-    --data_config_path /work/dlclarge1/mallik-warmstarting/warmstarting_exps/misc/neeratyoy/code/warmstarting_exps/configs/data_handlers/wikitext_data_handler.yaml \
-    --train_config_path /work/dlclarge1/mallik-warmstarting/misc/neeratyoy/code/warmstarting_exps/configs/train_template.yaml \
-    --output_dir /work/dlclarge1/mallik-warmstarting/misc/neeratyoy/code/warmstarting_exps/results/test_run/
+base_path=$(dirname "$0")  # reads the file's parent directory
+
+dataset="wikitext"
+name="global"  # load the relevant canvas settings
+exp_tree="test_run/sp"  # change the experiment subdirectory name
+
+python ${base_path}"/../../warms/run_main.py" \
+    --canvas_access $name \
+    --output_tree $exp_tree \
+    --dataset $dataset \
+    # add the following line to override canvas.train_template
+    # --train_config_path $1
 # end of file

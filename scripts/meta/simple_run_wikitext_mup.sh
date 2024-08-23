@@ -1,7 +1,17 @@
-cd /work/dlclarge1/mallik-warmstarting/scale_and_warmstart/
+#!/bin/bash
 
-python examples/run_configs.py \
-    --data_config_path /work/dlclarge1/mallik-warmstarting/warmstarting_exps/configs/data_handlers/wikitext_data_handler.yaml \
-    --train_config_path /work/dlclarge1/mallik-warmstarting/warmstarting_exps/configs/train_template_mup.yaml \
-    --output_dir /work/dlclarge1/mallik-warmstarting/warmstarting_exps/results/test_run_mup/
-# end of file
+base_path=$(dirname "$0")  # reads the file's parent directory
+
+dataset="wikitext"
+name="global"  # load the relevant canvas settings
+exp_tree="test_run/mup"  # change the experiment subdirectory name
+
+# edit the train_config_path here to run a mup-enabled training configuration
+train_config_path=${base_path}"/../../configs/train_template_mup.yaml" 
+
+python ${base_path}"/../../warms/run_main.py" \
+    --canvas_access $name \
+    --output_tree $exp_tree \
+    --dataset $dataset \
+    --train_config_path $train_config_path  # override canvas.train_template
+# end of file]

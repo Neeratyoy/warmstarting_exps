@@ -4,20 +4,25 @@ import lightning as L
 from litgpt.config import Config
 from pathlib import Path
 
-from saws import DataHandler, TrainConfig, main
-from saws.config.utils import preprocess_wikitext
+from saws import TrainConfig, main
 
-from warms.utils.support import prepare_data_handler_from_file
-
-
-BASE_PATH = Path("/work/dlclarge1/mallik-warmstarting")
-DATA_BASE_PATH = BASE_PATH / "warmstarting_exps" / "configs" / "data_handlers"
-TEMPLATE_PATH = BASE_PATH / "misc" / "neeratyoy" / "code" / "warmstarting_exps" / "configs" / "train_template.yaml"
+from warms import (
+    CANVAS_BASE_PATH,
+    DATASET_MAP,
+    ExpCanvas,
+    prepare_data_handler_from_file
+)
 
 
 def get_args():
     parser = argparse.ArgumentParser(description="Parser for generating MuP base files")
 
+    parser.add_argument(
+        "--canvas_access",
+        type=str,
+        default="global",
+        help="The key to decide the access point of the experiment configuration",
+    )
     parser.add_argument(
         "--dataset",
         type=str,
@@ -26,14 +31,9 @@ def get_args():
         choices=["wikitext", "slimpajama"]
     )
     parser.add_argument(
-        "--data_root_path",
+        "--output_tree",
         type=str,
-        default="/work/dlclarge1/mallik-warmstarting/scale_and_warmstart/data",
-    )
-    parser.add_argument(
-        "--output_dir",
-        type=str,
-        default=BASE_PATH / "warmstarting_exps" / "results" / "temp",
+        default="./",
     )
     parser.add_argument(
         "--mup_base",
@@ -60,13 +60,16 @@ def get_args():
 if __name__ == "__main__":
     args = get_args()
 
+    # Setting experiment canvas for path management
+    canvas = ExpCanvas(CANVAS_BASE_PATH, args.canvas_access)
+
     # Loading
-    train_config = TrainConfig.from_path(TEMPLATE_PATH)
-    _train_config = deepcopy(train_config)
+    train_config = TrainConfig.from_path(canvas.train_template)
+    _train_config = deepcopy(train_config)  # for debugging purposes
     data_config = prepare_data_handler_from_file(
-        DATA_BASE_PATH / f"{args.dataset}_data_handler.yaml",
-        train_config,
-        Path(args.data_root_path),
+        data_config_path=canvas.data_handler_root / DATASET_MAP(args.dataset),
+        train_config=train_config,
+        root_data_path=canvas.data_root
     )
     model_config = Config.from_file(Path(args.mup_target))
 
@@ -81,9 +84,10 @@ if __name__ == "__main__":
     
     # Running
     fabric = L.Fabric(devices="auto", strategy="auto")
-    main(
-        fabric,
-        data_config,
-        train_config,
-        Path(args.output_dir),
+    result_dict = main(
+        fabric=fabric,
+        data=data_config,
+        train_args=train_config,
+        out_dir=canvas.results_root / args.output_tree  # uses the canvas info as parent directory
     )
+# end of file
