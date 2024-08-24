@@ -77,3 +77,19 @@ python warms/run_main.py \
 ```
 
 **NOTE**: These examples represent an atomic run that should not break with any commit
+
+### For customized runs
+
+Refer to [template for training configuration](configs/train_template.yaml) which can be loaded 
+using `saws.TrainConfig()` and customized to run the training of choice.
+
+For new datasets, add a configuration for the dataset similar to the [existing data configurations](configs/data_handlers/). 
+Add the suitable key in the [dataset map](warms/__init__.py) for this experiment repo.
+To train using this dataset, simply [run the training](warms/run_main.py) with the new dataset key. 
+This will trigger the download and preprocessing (assuming _huggingface_ data).
+
+### For customized experiment setup
+
+Update the `.toml` file in the format of [`*_exp_canvas.toml`](configs/meta_exp_canvas.toml).
+Note that any sub-user can only redefine variables that have been defined in `global`.
+In order to enforce _Path()_ type-casting of path variables, the corresponding key should have at least one of _root_, _dir_, or _path_ in its name.
