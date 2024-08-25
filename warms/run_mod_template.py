@@ -17,6 +17,19 @@ from warms import (
 )
 
 
+def warmstart_parser(args: argparse.Namespace, train_config: TrainConfig) -> TrainConfig:
+    if args.warmstart:
+        train_config.warmstart_config.activate = True
+        train_config.warmstart_config.warmstart_type = args.warmstart_type
+        train_config.warmstart_config.buffer_logging = args.warmstart_log_buffer
+        train_config.warmstart_config.base_model_path = args.warmstart_base_path
+        train_config.warmstart_type = args.warmstart_type
+        train_config.warmstart_log_buffer = args.warmstart_log_buffer
+        train_config.warmstart_base_path = args.warmstart_base_path
+    
+    return train_config
+
+
 def get_args():
     parser = argparse.ArgumentParser(description="Parser for generating MuP base files")
 
@@ -60,6 +73,11 @@ def get_args():
         help="The path to target scale model config"
     )
 
+    parser.add_argument("--warmstart", action="store_true")
+    parser.add_argument("--warmstart_type", type=str, default="zeros")
+    parser.add_argument("--warmstart_log_buffer", action="store_true")
+    parser.add_argument("--warmstart_base_path", type=str, default=None)
+
     return parser.parse_args()
 
 
@@ -80,7 +98,6 @@ if __name__ == "__main__":
         if args.train_template is None
         else Path(args.train_template)
     )
-    _train_config = deepcopy(train_config)  # for debugging purposes
     data_config = prepare_data_handler_from_file(
         data_config_path=canvas.data_handler_root / DATASET_MAP(args.dataset),
         train_config=train_config,
@@ -94,9 +111,12 @@ if __name__ == "__main__":
             setattr(train_config.model_config, k, getattr(model_config, k, v))
     train_config.model_config.d_model = model_config.n_embd
     train_config.block_size = model_config.block_size
+    # adjusting for muP
     if args.base_lr is not None and args.mup_base is not None:
         train_config.mup_base_shape_path = Path(args.mup_base)
         train_config.max_lr = args.base_lr  # crucial for muP to work properly
+    # adjusting for warmstarting
+    train_config = warmstart_parser(args, train_config)
     
     # Running
     fabric = L.Fabric(devices="auto", strategy="auto")

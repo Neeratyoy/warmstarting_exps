@@ -76,7 +76,10 @@ python warms/run_main.py \
     --train_config_path "configs/train_template_mup.yaml"
 ```
 
-**NOTE**: These examples represent an atomic run that should not break with any commit
+### Quick run with warmstart
+
+Set `warmstart_config.activate: true` in the [template](configs/train_template_mup.yaml) and run [the above](#quick-run-with-muparam) (with other suitable changes such as output path, etc.).
+
 
 ### For customized runs
 

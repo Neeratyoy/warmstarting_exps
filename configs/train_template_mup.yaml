@@ -1,3 +1,11 @@
+warmstart_config_path: null
+warmstart_config:
+  activate: false
+  buffer_logging: false
+  base_model_path: /work/dlclarge1/mallik-warmstarting/warmstarting_exps/results/talk/sp/constLR/scale0
+  warmstarting_type: zeros
+  warmstarting_args: null
+
 block_size: 1024
 model_config_path: null
 model_config:
@@ -29,8 +37,8 @@ weight_init_type: null
 z_loss_eps: null
 
 devices: 1
-micro_batch_size: 4
-accumulation_iters: 2
+micro_batch_size: 8
+accumulation_iters: 1
 
 clip_max_norm: null
 clip_max_val: null
