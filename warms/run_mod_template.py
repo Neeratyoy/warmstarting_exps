@@ -23,10 +23,6 @@ def warmstart_parser(args: argparse.Namespace, train_config: TrainConfig) -> Tra
         train_config.warmstart_config.warmstart_type = args.warmstart_type
         train_config.warmstart_config.buffer_logging = args.warmstart_log_buffer
         train_config.warmstart_config.base_model_path = args.warmstart_base_path
-        train_config.warmstart_type = args.warmstart_type
-        train_config.warmstart_log_buffer = args.warmstart_log_buffer
-        train_config.warmstart_base_path = args.warmstart_base_path
-    
     return train_config
 
 
