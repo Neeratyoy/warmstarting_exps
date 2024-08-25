@@ -67,7 +67,6 @@ class ExpCanvas:
         try:
             value = self.config.get(name, self.global_config.get(name))
             # NOTE: absolute values ensure that overloaded folder names and string name don't clash
-            value = Path(value).absolute() if isinstance(value, str) else value
             if self._check_if_path(name, value):
                 value = Path(value)
             return value
@@ -75,17 +74,17 @@ class ExpCanvas:
             raise AttributeError(f"Attribute '{name}' not found in config.")
         
     def _check_if_path(self, key: str, value: str) -> bool:
-        _value = value  # backup
-        if isinstance(value, Path):
-            if value.exists():
-                # if the absolute path exists, it is a path
-                # can be False if a directory such as the output has not yet been created
-                return True
-            # if it doesn't exist yet,
-            #  it is either a string, or
-            #  it is a path that doesn't exist, such as a new output directory
-            if "path" in key or "root" in key or "dir" in key:
-                # if the key has a path-like name, it is a path
-                return True
+        if value is None:
+            return False
+        if Path(value).exists():
+            # if the absolute path exists, it is a path
+            # can be False if a directory such as the output has not yet been created
+            return True
+        # if it doesn't exist yet,
+        #  it is either a string, or
+        #  it is a path that doesn't exist, such as a new output directory
+        if "path" in key or "root" in key or "dir" in key:
+            # if the key has a path-like name, it is a path
+            return True
         return False
 # end of file
