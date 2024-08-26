@@ -19,10 +19,10 @@ from warms import (
 
 def warmstart_parser(args: argparse.Namespace, train_config: TrainConfig) -> TrainConfig:
     if args.warmstart:
-        train_config.warmstart_config.activate = True
-        train_config.warmstart_config.warmstart_type = args.warmstart_type
-        train_config.warmstart_config.buffer_logging = args.warmstart_log_buffer
-        train_config.warmstart_config.base_model_path = args.warmstart_base_path
+        setattr(train_config.warmstart_config, "activate", True)
+        setattr(train_config.warmstart_config, "warmstart_type", args.warmstart_type)
+        setattr(train_config.warmstart_config, "buffer_logging", args.warmstart_log_buffer)
+        setattr(train_config.warmstart_config, "base_model_path", args.warmstart_base_path)
     return train_config
 
 
@@ -113,7 +113,7 @@ if __name__ == "__main__":
         train_config.max_lr = args.base_lr  # crucial for muP to work properly
     # adjusting for warmstarting
     train_config = warmstart_parser(args, train_config)
-    
+
     # Running
     fabric = L.Fabric(devices="auto", strategy="auto")
     result_dict = main(

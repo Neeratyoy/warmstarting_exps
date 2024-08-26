@@ -3,7 +3,7 @@ warmstart_config:
   activate: false
   buffer_logging: false
   base_model_path: /work/dlclarge1/mallik-warmstarting/warmstarting_exps/results/talk/sp/constLR/scale0
-  warmstarting_type: zeros
+  warmstart_type: slice
   warmstarting_args: null
 
 block_size: 1024
