@@ -5,14 +5,17 @@ warmstart_config:
   base_model_path: /work/dlclarge1/mallik-warmstarting/warmstarting_exps/results/talk/sp/constLR/scale0
   warmstart_type: slice
   warmstarting_args: null
+  # warm_type: zeros
+  # shrinkage_factor: 1
+  # perturbation_sigma: 0.5
 
 block_size: 1024
 model_config_path: null
 model_config:
   bias: true
   block_size: 1024
-  n_embd: 96
-  n_head: 6
+  n_embd: 192
+  n_head: 8
   n_layer: 6
   norm_class_name: LayerNorm
   vocab_size: 50257
@@ -37,8 +40,9 @@ weight_init_type: null
 z_loss_eps: null
 
 devices: 1
-micro_batch_size: 8
+micro_batch_size: 9
 accumulation_iters: 1
+max_micro_batch_size: null
 
 clip_max_norm: null
 clip_max_val: null
@@ -60,7 +64,7 @@ tracked_metrics:
   z_loss: 5
 
 max_tokens: null
-tokens_per_param: 20
+tokens_per_param: 10
 max_train_steps: null
 max_val_steps: 10
 validate_every: 5
