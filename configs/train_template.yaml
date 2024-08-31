@@ -2,7 +2,7 @@ warmstart_config_path: null
 warmstart_config:
   activate: false
   buffer_logging: false
-  base_model_path: /work/dlclarge1/mallik-warmstarting/warmstarting_exps/results/talk/sp/constLR/scale0
+  base_model_path: /work/dlclarge1/mallik-warmstarting/warmstarting_exps/results/shitty_draft/slimpajama/block=1024_depth=6/baseline/sp/constLR/scale0
   warmstart_type: slice
   warmstarting_args: null
   # warm_type: zeros
@@ -50,6 +50,8 @@ clip_max_val: null
 global_log_step: 1
 tracked_metrics:
   gradient_norm_per_layer: 5
+  l1_norm_per_layer: 5
+  l2_norm_per_layer: 5
   learning_rate: 5
   max_attention_logits_all: 5
   max_attention_logits_per_layer: 5
@@ -57,10 +59,12 @@ tracked_metrics:
   output_logits_max: 5
   output_logits_mean: 5
   total_gradient_norm: 5
+  total_l1_norm: 5
+  total_l2_norm: 5
   train_loss: 1
   validation_loss: 1
-  weight_spectra_diff: 50
-  weight_spectra_max: 50
+  weight_spectra_diff: 100
+  weight_spectra_max: 100
   z_loss: 5
 
 max_tokens: null
