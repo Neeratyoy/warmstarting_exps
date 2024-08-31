@@ -5,7 +5,9 @@ import argparse
 from copy import deepcopy
 import lightning as L
 from litgpt.config import Config
+import numpy as np
 from pathlib import Path
+import yaml
 
 from saws import TrainConfig, main
 
@@ -88,18 +90,21 @@ if __name__ == "__main__":
     # Setting experiment canvas for path management
     canvas = ExpCanvas(CANVAS_BASE_PATH, args.canvas_access)
 
-    # Loading
-    train_config = TrainConfig.from_path(
-        canvas.train_template
-        if args.train_template is None
-        else Path(args.train_template)
-    )
-    data_config = prepare_data_handler_from_file(
-        data_config_path=canvas.data_handler_root / DATASET_MAP(args.dataset),
-        train_config=train_config,
-        root_data_path=canvas.data_root
-    )
-    model_config = Config.from_file(Path(args.target_scale))
+    # Loading model config
+    with open(Path(args.target_scale), "r", encoding='utf-8') as f:
+        _model_config = yaml.safe_load(f)
+    _max_micro_batch_size = None
+    if "max_micro_batch_size" in _model_config:
+        _max_micro_batch_size = _model_config.pop("max_micro_batch_size")
+    model_config = Config(**_model_config)
+
+    # Loading train config
+    _train_path = canvas.train_template if args.train_template is None else Path(args.train_template)
+    with open(Path(_train_path), "r", encoding='utf-8') as f:
+        _train_config = yaml.safe_load(f)
+    if _max_micro_batch_size is not None:
+        _train_config["max_micro_batch_size"] = _max_micro_batch_size
+    train_config = TrainConfig(**_train_config)
 
     # Updating the model config in train config
     for k, v in train_config.model_config.to_dict().items():
@@ -113,6 +118,12 @@ if __name__ == "__main__":
         train_config.max_lr = args.base_lr  # crucial for muP to work properly
     # adjusting for warmstarting
     train_config = warmstart_parser(args, train_config)
+
+    data_config = prepare_data_handler_from_file(
+        data_config_path=canvas.data_handler_root / DATASET_MAP(args.dataset),
+        train_config=train_config,
+        root_data_path=canvas.data_root
+    )
 
     # Running
     fabric = L.Fabric(devices="auto", strategy="auto")
