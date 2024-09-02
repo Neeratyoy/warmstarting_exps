@@ -7,3 +7,4 @@ n_layer: 6
 n_query_groups: null
 norm_class_name: LayerNorm
 vocab_size: 50257
+max_micro_batch_size: 9

@@ -2,7 +2,7 @@
 
 [global]
 env_name = "warm_env_global"
-workspace = "/work/dlclarge1/mallik-warmstarting/"
+workspace_path = "/work/dlclarge1/mallik-warmstarting/"
 setup_script_path = "/work/dlclarge1/mallik-warmstarting/misc/setup_script.sh"
 env_path="/work/dlclarge1/mallik-warmstarting/envs/"
 venv_template_path = "/work/dlclarge1/mallik-warmstarting/venv_templates/"
@@ -27,7 +27,7 @@ saws_root = "/work/dlclarge1/mallik-warmstarting/misc/neeratyoy/code/scale_and_w
 warms_root = "/work/dlclarge1/mallik-warmstarting/misc/neeratyoy/code/warmstarting_exps/"
 data_handler_root = "/work/dlclarge1/mallik-warmstarting/misc/neeratyoy/code/warmstarting_exps/configs/data_handlers/"
 
-results_root = "/work/dlclarge1/mallik-warmstarting/warmstarting_exps/results/"
-slurm_logs_root = "/work/dlclarge1/mallik-warmstarting/warmstarting_exps/misc/neeratyoy/exps/slurm_logs/"
+slurm_logs_root = "/work/dlclarge1/mallik-warmstarting/misc/neeratyoy/exps/talk/slurm_logs/"
 
 train_template = "/work/dlclarge1/mallik-warmstarting/misc/neeratyoy/code/warmstarting_exps/configs/train_template.yaml"
+# train_template = "/work/dlclarge1/mallik-warmstarting/misc/neeratyoy/exps/talk/configs/base_template_const.yaml"
