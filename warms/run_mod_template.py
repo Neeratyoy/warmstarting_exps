@@ -2,13 +2,13 @@
 """
 
 import argparse
+import yaml
 from copy import deepcopy
 import lightning as L
 from litgpt.config import Config
-import numpy as np
 from pathlib import Path
-import yaml
 
+from saws.config.yaml_utils import path_constructor
 from saws import TrainConfig, main
 
 from warms import (
@@ -21,10 +21,13 @@ from warms import (
 
 def warmstart_parser(args: argparse.Namespace, train_config: TrainConfig) -> TrainConfig:
     if args.warmstart:
-        setattr(train_config.warmstart_config, "activate", True)
-        setattr(train_config.warmstart_config, "warmstart_type", args.warmstart_type)
-        setattr(train_config.warmstart_config, "buffer_logging", args.warmstart_log_buffer)
-        setattr(train_config.warmstart_config, "base_model_path", args.warmstart_base_path)
+        train_config["warmstart_config"]["activate"] = True
+        train_config["warmstart_config"]["warmstart_type"] = args.warmstart_type
+        train_config["warmstart_config"]["buffer_logging"] = args.warmstart_log_buffer
+        if args.warmstart_base_path is not None:
+            train_config["warmstart_config"]["base_model_path"] = args.warmstart_base_path
+        else:
+            assert train_config["warmstart_config"]["base_model_path"] is not None, "Base model path is required for warmstarting."
     return train_config
 
 
@@ -58,16 +61,17 @@ def get_args():
         "--mup_base",
         type=str,
         help="The path to the .bsh file for base muP scale"
-    )   
+    )
     parser.add_argument(
         "--base_lr",
         type=float,
+        default=None,
         help="The optimal LR at the base scale"
-    )   
+    )
     parser.add_argument(
         "--target_scale",
         type=str,
-        required=True,
+        default=None,
         help="The path to target scale model config"
     )
 
@@ -90,34 +94,33 @@ if __name__ == "__main__":
     # Setting experiment canvas for path management
     canvas = ExpCanvas(CANVAS_BASE_PATH, args.canvas_access)
 
-    # Loading model config
-    with open(Path(args.target_scale), "r", encoding='utf-8') as f:
-        _model_config = yaml.safe_load(f)
-    _max_micro_batch_size = None
-    if "max_micro_batch_size" in _model_config:
-        _max_micro_batch_size = _model_config.pop("max_micro_batch_size")
-    model_config = Config(**_model_config)
+    # Loading
+    yaml.SafeLoader.add_constructor('!path', path_constructor)
+    with (canvas.train_template if args.train_template is None else Path(args.train_template)).open(
+            encoding="utf-8") as yaml_file:
+        train_config = yaml.safe_load(yaml_file)
 
-    # Loading train config
-    _train_path = canvas.train_template if args.train_template is None else Path(args.train_template)
-    with open(Path(_train_path), "r", encoding='utf-8') as f:
-        _train_config = yaml.safe_load(f)
-    if _max_micro_batch_size is not None:
-        _train_config["max_micro_batch_size"] = _max_micro_batch_size
-    train_config = TrainConfig(**_train_config)
+    if args.target_scale is not None:
+        with (Path(args.target_scale)).open(encoding="utf-8") as yaml_file:
+            model_config = yaml.safe_load(yaml_file)
+        if "max_micro_batch_size" in model_config:
+            _max_micro_batch_size = model_config.pop("max_micro_batch_size")
+            if _max_micro_batch_size is not None:
+                train_config["max_micro_batch_size"] = _max_micro_batch_size
 
-    # Updating the model config in train config
-    for k, v in train_config.model_config.to_dict().items():
-        if k in model_config.__dict__:
-            setattr(train_config.model_config, k, getattr(model_config, k, v))
-    train_config.model_config.d_model = model_config.n_embd
-    train_config.block_size = model_config.block_size
+        train_config["model_config"] = model_config
+        train_config["block_size"] = model_config["block_size"]
+
     # adjusting for muP
-    if args.base_lr is not None and args.mup_base is not None:
-        train_config.mup_base_shape_path = Path(args.mup_base)
-        train_config.max_lr = args.base_lr  # crucial for muP to work properly
+    if args.base_lr is not None:
+        train_config["max_lr"] = args.base_lr  # crucial for muP to work properly
+    if args.mup_base is not None:
+        train_config["mup_base_shape_path"] = Path(args.mup_base)
+
     # adjusting for warmstarting
     train_config = warmstart_parser(args, train_config)
+
+    train_config = TrainConfig(**train_config)
 
     data_config = prepare_data_handler_from_file(
         data_config_path=canvas.data_handler_root / DATASET_MAP(args.dataset),
