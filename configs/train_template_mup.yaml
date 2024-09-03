@@ -49,6 +49,7 @@ tracked_metrics:
   gradient_norm_per_layer: 5
   l1_norm_per_layer: 5
   l2_norm_per_layer: 5
+  l1_norm_activations_per_layer: 5
   learning_rate: 5
   max_attention_logits_all: 5
   max_attention_logits_per_layer: 5
