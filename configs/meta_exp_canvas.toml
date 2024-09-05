@@ -32,6 +32,18 @@ slurm_logs_root = "/work/dlclarge1/mallik-warmstarting/misc/neeratyoy/exps/talk/
 train_template = "/work/dlclarge1/mallik-warmstarting/misc/neeratyoy/code/warmstarting_exps/configs/train_template.yaml"
 # train_template = "/work/dlclarge1/mallik-warmstarting/misc/neeratyoy/exps/talk/configs/base_template_const.yaml"
 
+[janowski]
+env_name = "ym_env"
+
+saws_root = "/work/dlclarge1/mallik-warmstarting/misc/janowski/code/scale_and_warmstart/"
+warms_root = "/work/dlclarge1/mallik-warmstarting/misc/janowski/code/warmstarting_exps/"
+data_handler_root = "/work/dlclarge1/mallik-warmstarting/misc/neeratyoy/code/warmstarting_exps/configs/data_handlers/"
+
+slurm_logs_root = "/work/dlclarge1/mallik-warmstarting/misc/janowski/exps/post_shitty_draft/slurm_logs/"
+
+train_template = "/work/dlclarge1/mallik-warmstarting/misc/neeratyoy/code/warmstarting_exps/configs/train_template.yaml"
+# train_template = "/work/dlclarge1/mallik-warmstarting/misc/neeratyoy/exps/talk/configs/base_template_const.yaml"
+
 [johannes]
 env_name = "warm_env_hogj"
 
