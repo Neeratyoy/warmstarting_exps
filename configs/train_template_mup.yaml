@@ -4,7 +4,8 @@ warmstart_config:
   buffer_logging: false
   base_model_path: /work/dlclarge1/mallik-warmstarting/warmstarting_exps/results/shitty_draft/slimpajama/block=1024_depth=6/baseline/sp/constLR/scale0
   warmstart_type: zeros
-  warmstarting_args: null
+  warmstarting_args: 
+    use_init_std_as_perturb: false
 
 block_size: 1024
 model_config_path: null
