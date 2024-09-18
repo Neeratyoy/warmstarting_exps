@@ -79,5 +79,6 @@ load_state_path: null
 # NOTE: when loading a checkpoint from above, the below arguments are overwritten by the checkpoint
 update_every_k: 10  # updates the checkpoints with the same name
 save_every_k: null  # saves a new checkpoint state with a step added to name
+save_total_k: 10  # saves a total of k checkpoints given the training steps, overriding the above two
 
 seed: 444
