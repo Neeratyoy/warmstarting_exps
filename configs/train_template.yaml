@@ -3,7 +3,8 @@ warmstart_config:
   activate: false
   base_model_path: /work/dlclarge1/mallik-warmstarting/warmstarting_exps/results/shitty_draft/slimpajama/block=1024_depth=6/baseline/sp/constLR/scale0
   warmstart_type: snp_slice_with_mup
-  warmstarting_args: null
+  warmstarting_args: 
+    base_model_step: null
 
 block_size: 1024
 model_config_path: null
