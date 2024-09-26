@@ -37,7 +37,7 @@ weight_init_type: null
 z_loss_eps: null
 
 devices: 1
-micro_batch_size: 9
+micro_batch_size: 64
 accumulation_iters: 1
 max_micro_batch_size: null
 
