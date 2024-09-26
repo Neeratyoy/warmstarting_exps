@@ -23,11 +23,25 @@ def warmstart_parser(args: argparse.Namespace, train_config: TrainConfig) -> Tra
     if args.warmstart:
         train_config["warmstart_config"]["activate"] = True
         train_config["warmstart_config"]["warmstart_type"] = args.warmstart_type
-        train_config["warmstart_config"]["buffer_logging"] = args.warmstart_log_buffer
+        if args.base_model_step is not None:
+            if "warmstarting_args" not in train_config["warmstart_config"]:
+                train_config["warmstart_config"]["warmstarting_args"] = {}
+            train_config["warmstart_config"]["warmstarting_args"]["base_model_step"] = args.base_model_step
+
         if args.warmstart_base_path is not None:
             train_config["warmstart_config"]["base_model_path"] = args.warmstart_base_path
         else:
             assert train_config["warmstart_config"]["base_model_path"] is not None, "Base model path is required for warmstarting."
+
+        if args.shrinking_factor is not None:
+            if "warmstarting_args" not in train_config["warmstart_config"]:
+                train_config["warmstart_config"]["warmstarting_args"] = {}
+            train_config["warmstart_config"]["warmstarting_args"]["shrinking_factor"] = args.shrinking_factor
+        if args.perturbation_sigma is not None:
+            if "warmstarting_args" not in train_config["warmstart_config"]:
+                train_config["warmstart_config"]["warmstarting_args"] = {}
+            train_config["warmstart_config"]["warmstarting_args"]["perturbation_sigma"] = args.perturbation_sigma
+    
     return train_config
 
 
@@ -68,6 +82,7 @@ def get_args():
         default=None,
         help="The optimal LR at the base scale"
     )
+
     parser.add_argument(
         "--target_scale",
         type=str,
@@ -77,8 +92,16 @@ def get_args():
 
     parser.add_argument("--warmstart", action="store_true")
     parser.add_argument("--warmstart_type", type=str, default="zeros")
-    parser.add_argument("--warmstart_log_buffer", action="store_true")
     parser.add_argument("--warmstart_base_path", type=str, default=None)
+    parser.add_argument("--base_model_step", type=int, default=None)
+    parser.add_argument("--shrinking_factor", type=float, default=None)
+    parser.add_argument("--perturbation_sigma", type=float, default=None)
+    parser.add_argument(
+        "--micro_batch_size",
+        type=int,
+        default=None,
+        help="The micro batch size for the base scale"
+    )
 
     return parser.parse_args()
 
@@ -99,7 +122,9 @@ if __name__ == "__main__":
     with (canvas.train_template if args.train_template is None else Path(args.train_template)).open(
             encoding="utf-8") as yaml_file:
         train_config = yaml.safe_load(yaml_file)
-
+    
+    if args.micro_batch_size is not None:            
+        train_config["micro_batch_size"] = args.micro_batch_size
     if args.target_scale is not None:
         with (Path(args.target_scale)).open(encoding="utf-8") as yaml_file:
             model_config = yaml.safe_load(yaml_file)
@@ -107,7 +132,7 @@ if __name__ == "__main__":
             _max_micro_batch_size = model_config.pop("max_micro_batch_size")
             if _max_micro_batch_size is not None:
                 train_config["max_micro_batch_size"] = _max_micro_batch_size
-
+        
         train_config["model_config"] = model_config
         train_config["block_size"] = model_config["block_size"]
 

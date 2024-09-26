@@ -65,6 +65,7 @@ tracked_metrics:
   weight_spectra_max: 100
   z_loss: 5
 
+micro_batch_size: 64
 max_tokens: null
 tokens_per_param: 20
 max_train_steps: null

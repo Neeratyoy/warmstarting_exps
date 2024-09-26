@@ -4,6 +4,9 @@ warmstart_config:
   base_model_path: /work/dlclarge1/mallik-warmstarting/warmstarting_exps/results/shitty_draft/slimpajama/block=1024_depth=6/baseline/sp/constLR/scale0
   warmstart_type: snp_slice_with_mup
   warmstarting_args: null
+  restart_dataloader: false
+  warmstarting_args: 
+    base_model_step: null
 
 block_size: 1024
 model_config_path: null
@@ -36,7 +39,7 @@ weight_init_type: null
 z_loss_eps: null
 
 devices: 1
-micro_batch_size: 9
+micro_batch_size: 64
 accumulation_iters: 1
 max_micro_batch_size: null
 
@@ -64,6 +67,7 @@ tracked_metrics:
   weight_spectra_max: 100
   z_loss: 5
 
+micro_batch_size: 64
 max_tokens: null
 tokens_per_param: 10
 max_train_steps: null
@@ -75,6 +79,6 @@ load_state_path: null
 # NOTE: when loading a checkpoint from above, the below arguments are overwritten by the checkpoint
 update_every_k: 10  # updates the checkpoints with the same name
 save_every_k: null  # saves a new checkpoint state with a step added to name
-save_total_k: 10  # saves a total of k checkpoints given the training steps, overriding the above two
+save_total_k: null  # saves a total of k checkpoints given the training steps, overriding the above two
 
 seed: 444
