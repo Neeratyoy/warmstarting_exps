@@ -5,8 +5,6 @@ warmstart_config:
   warmstart_type: snp_slice_with_mup
   warmstarting_args: null
   restart_dataloader: false
-  warmstarting_args: 
-    base_model_step: null
 
 block_size: 1024
 model_config_path: null
@@ -20,7 +18,7 @@ model_config:
   vocab_size: 50257
 
 mup_base_scales: null
-mup_base_shape_path: null
+mup_base_shape_path: /work/dlclarge1/mallik-warmstarting/misc/neeratyoy/code/warmstarting_exps/configs/width_only/dev/mup/width-only_block=1024_depth=6_scale0.bsh
 
 torch_scheduler: null
 torch_scheduler_args: null
@@ -41,7 +39,7 @@ z_loss_eps: null
 devices: 1
 micro_batch_size: 64
 accumulation_iters: 1
-max_micro_batch_size: null
+max_micro_batch_size: 9
 
 clip_max_norm: null
 clip_max_val: null
@@ -59,8 +57,8 @@ tracked_metrics:
   output_logits_max: 5
   output_logits_mean: 5
   total_gradient_norm: 5
-  total_l1_norm: 5
-  total_l2_norm: 5
+  mean_l1_weight_norm: 5
+  mean_l2_weight_norm: 5
   train_loss: 1
   validation_loss: 1
   weight_spectra_diff: 100
@@ -74,7 +72,7 @@ max_val_steps: 10
 validate_every: 5
 
 save_state_path: null
-load_state_path: null
+load_state_path: null  # /work/dlclarge1/mallik-warmstarting/warmstarting_exps/results/test_run/data_resume/mup_s0_s2
 # NOTE: when loading a checkpoint from above, the below arguments are overwritten by the checkpoint
 update_every_k: 10  # updates the checkpoints with the same name
 save_every_k: null  # saves a new checkpoint state with a step added to name
