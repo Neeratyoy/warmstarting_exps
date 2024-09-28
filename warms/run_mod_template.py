@@ -96,6 +96,7 @@ def get_args():
     parser.add_argument("--base_model_step", type=int, default=None)
     parser.add_argument("--shrinking_factor", type=float, default=None)
     parser.add_argument("--perturbation_sigma", type=float, default=None)
+    parser.add_argument("--seed", type=int, default=444, help="The seed for the experiment")
     parser.add_argument(
         "--micro_batch_size",
         type=int,
@@ -144,7 +145,7 @@ if __name__ == "__main__":
 
     # adjusting for warmstarting
     train_config = warmstart_parser(args, train_config)
-
+    train_config["seed"] = args.seed
     train_config = TrainConfig(**train_config)
 
     data_config = prepare_data_handler_from_file(
@@ -159,6 +160,6 @@ if __name__ == "__main__":
         fabric=fabric,
         data=data_config,
         train_args=train_config,
-        out_dir=canvas.results_root / args.output_tree  # uses the canvas info as parent directory
+        out_dir=canvas.results_root / args.output_tree / f"seed={args.seed}"  # uses the canvas info as parent directory
     )
 # end of file
