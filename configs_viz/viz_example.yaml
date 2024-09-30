@@ -1,0 +1,84 @@
+# Saving arguments
+output_dir: /work/dlclarge1/mallik-warmstarting/warmstarting_exps/results/example_plots
+file_name: grid_example
+
+# Arguments that will be used as default for all axes. Can be overwritten by axes. Note that null values also overwrite.
+default_axes_args:
+  smoothing: true
+  smoothing_window: 500
+  use_first_stage_warmstarting: false
+  metric: Validation Loss
+  x_axis: flops
+  y_scale: log
+  x_scale: log
+
+# Figure level plotting
+figsize:
+  - 10
+  - 6
+nrows: 2
+ncols: 2
+global_legend: true # One legend for all axes, will deactivate legends of axis
+global_xlabel: null # One x-axis label for all, will deactivate labels of subplots
+global_ylabel: global label # One y-axis label for all, will deactivate labels of subplots
+sns_context: talk # One of {paper, notebook, talk, poster}
+
+axes:
+  0,0:
+    sharex: null # the key of the axes which will share the x-axis with this one
+    sharey: null # the key of the axes which will share the y-axis with this one
+    plotting_function_args:
+      results_dirs: # list[str]
+        - /work/dlclarge1/mallik-warmstarting/warmstarting_exps/results/workshop/slimpajama/mup/scale0_scale2
+        - /work/dlclarge1/mallik-warmstarting/warmstarting_exps/results/workshop/slimpajama/mup/scale0_scale4
+      run_names: # list[str]
+        - "[0-2] muP"
+        - "[0-4] muP"
+      x_axis: flops
+      metric: Validation Loss
+      remove_x_labels: false
+      remove_y_labels: false
+      remove_legend: false
+      x_limits: null # tuple[float, float] | None
+      y_limits: null
+      y_scale: log
+      x_scale: log
+      subtitle: null # str | None = None
+  0,1:
+    sharex: null # the key of the axes which will share the x-axis with this one
+    sharey: null # the key of the axes which will share the y-axis with this one
+    plotting_function_args:
+      results_dirs: # list[str]
+        - /work/dlclarge1/mallik-warmstarting/warmstarting_exps/results/workshop/slimpajama/mup/scale0_scale2
+        - /work/dlclarge1/mallik-warmstarting/warmstarting_exps/results/workshop/slimpajama/mup/scale0_scale4
+      run_names: # list[str]
+        - "[0-2] muP"
+        - "[0-4] muP"
+      x_axis: flops
+      metric: Validation Loss
+      remove_x_labels: true
+      remove_y_labels: true
+      remove_legend: false
+      x_limits: null # tuple[float, float] | None
+      y_limits: null
+      y_scale: log
+      x_scale: log
+      subtitle: bloop # str | None = None
+  1,1:
+    sharex: 0,0
+    sharey: 0,0
+    plotting_function_args:
+      results_dirs: # list[str]
+        - /work/dlclarge1/mallik-warmstarting/warmstarting_exps/results/workshop/slimpajama/mup/scale0_scale4
+      run_names: # list[str]
+        - "[0-4] muP"
+      x_axis: flops
+      metric: Validation Loss
+      remove_x_labels: false
+      remove_y_labels: false
+      remove_legend: false
+      x_limits: null # tuple[float, float] | None
+      y_limits: null
+      y_scale: log
+      x_scale: log
+      subtitle: null # str | None = None
