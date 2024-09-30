@@ -3,34 +3,35 @@ from pathlib import Path
 
 from matplotlib import pyplot as plt
 
+from saws.plot_results import NAMES_DICT, COLOR_DICT
 from scripts.utils import calculate_token_per_param, get_number_of_model_parameters
 import seaborn as sns
-
+import numpy as np
 BASE_MODEL_TOKENS_PER_PARAM = 20
 
 
 def plot_tokens_vs_flops(
+        ax: plt.Axes,
         run_names: list[str],
         scales: list[str],
         warmstart_schedules: list[str],
-        tokens_per_param_target_model: float,
-        model_root: str,
-        block: int,
-        depth: int,
-        output_dir: str,
-        file_name: str,
+        remove_x_labels: bool = False,
+        remove_y_labels: bool = False,
+        remove_legend: bool = False,
+        tokens_per_param_target_model: float = 20,
+        block: int = 1024,
+        depth: int = 6,
 ):
     assert len(set([scale.split("-")[0] for scale in scales])) == 1, "The first scale of all runs must be the same."
     assert len(set([scale.split("-")[-1] for scale in scales])) == 1, "The last scale of all runs must be the same."
-    model_root = Path(model_root)
-    output_dir = Path(output_dir)
+    model_root = Path(__file__).parent.parent / 'configs' / 'width_only' / 'dev'
     base_tokens = BASE_MODEL_TOKENS_PER_PARAM * get_number_of_model_parameters(model_root, block, depth,
                                                                                int(scales[0].split("-")[0]))
-    sns.set_style("white")
-    sns.set_context("talk")
-    fig, ax = plt.subplots()
+    # vertical lines
+    vlines_x = []
+    colors = sns.color_palette("deep", n_colors=len(run_names))
     # ax.grid(axis='x', linestyle='')
-    for run_name, scale, warmstart_schedule in zip(run_names, scales, warmstart_schedules):
+    for idx, (run_name, scale, warmstart_schedule) in enumerate(zip(run_names, scales, warmstart_schedules)):
         scale = [int(s) for s in scale.split("-")]
         if warmstart_schedule == "same_tokens":
             tokens_per_param = calculate_token_per_param(
@@ -59,6 +60,12 @@ def plot_tokens_vs_flops(
             compute.append(compute[-1] + compute_current_scale)
         else:
             raise ValueError(f"Unknown warmstart schedule: {warmstart_schedule}")
+
+        if run_name in COLOR_DICT:
+            colors[idx] = COLOR_DICT[run_name]
+        if run_name in NAMES_DICT:
+            run_name = NAMES_DICT[run_name]
+
         sns.lineplot(
             x=tokens,
             y=compute,
@@ -67,25 +74,28 @@ def plot_tokens_vs_flops(
             marker='o',
             markevery=1,
             zorder=2,
+            color=colors[idx],
         )
-    # ax.set_yscale("log")
-    # ax.set_xscale("log")
-    # tight layout
-    sns.despine(top=True, right=True)
+
+        vlines_x.append(tokens[-1])
+
+    if not remove_x_labels:
+        ax.set_xlabel("tokens")
+    if not remove_y_labels:
+        ax.set_ylabel("FLOPs")
+    if not remove_legend:
+        sns.move_legend(ax, "upper left", bbox_to_anchor=(1, 1), title=None)
+    else:
+        ax.get_legend().remove()
+
+    sns.despine(ax=ax, top=True, right=True)
+
     ax.axhline(y=compute[-1], color='black', linestyle='-', linewidth=2, zorder=1)
     ax.text(x=ax.get_xlim()[1], y=compute[-1]*1.025, s='max FLOPs', color='black', ha='right', va='bottom')
 
-    sns.move_legend(ax, "lower center", bbox_to_anchor=(.5, 1.2), ncol=3, title=None)
-    sns.move_legend(ax, "upper left", bbox_to_anchor=(1, 1), title=None)
-    ax.set_xlabel("tokens")
-    ax.set_ylabel("FLOPs")
-    plt.tight_layout()
-    plt.show()
-    output_dir.mkdir(parents=True, exist_ok=True)
-    fig.savefig(output_dir / f"{file_name}.png")
-    fig.savefig(output_dir / f"{file_name}.pdf")
-    plt.close(fig)
-
+    y_lim = ax.get_ylim()
+    ax.vlines(x=vlines_x, ymin=ax.get_ylim()[0], ymax=compute[-1], color=colors, linestyle=':', linewidth=2, zorder=2)
+    ax.set_ylim(y_lim)
 
 def get_args():
     parser = argparse.ArgumentParser(
@@ -127,12 +137,6 @@ def get_args():
         help="The filename of the saved figure.",
     )
     parser.add_argument(
-        "--model_root",
-        type=str,
-        required=True,
-        help="The root directory of the model.",
-    )
-    parser.add_argument(
         "--tokens_per_param_target_model",
         type=float,
         default=20,
@@ -158,14 +162,24 @@ def get_args():
 
 if __name__ == "__main__":
     args = get_args()
+
+    sns.set_style("white")
+    sns.set_context("talk")
+    fig, ax = plt.subplots()
+
     plot_tokens_vs_flops(
+        ax=ax,
         run_names=args.run_names,
         scales=args.scales,
         warmstart_schedules=args.warmstart_schedules,
         tokens_per_param_target_model=args.tokens_per_param_target_model,
-        model_root=args.model_root,
         block=args.block,
         depth=args.depth,
-        output_dir=args.output_dir,
-        file_name=args.file_name,
     )
+    output_dir = Path(args.output_dir)
+    plt.tight_layout()
+    plt.show()
+    output_dir.mkdir(parents=True, exist_ok=True)
+    fig.savefig(output_dir / f"{args.file_name}.png")
+    fig.savefig(output_dir / f"{args.file_name}.pdf")
+    plt.close(fig)

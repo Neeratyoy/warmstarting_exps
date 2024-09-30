@@ -16,6 +16,7 @@ default_axes_args:
 nrows: 2
 ncols: 2
 global_legend: true # One legend for all axes, will deactivate legends of axis
+global_legend_ncols: 5 # Number of columns in the global legend
 global_xlabel: null # One x-axis label for all, will deactivate labels of subplots
 global_ylabel: global label # One y-axis label for all, will deactivate labels of subplots
 sns_context: talk # One of {paper, notebook, talk, poster}
