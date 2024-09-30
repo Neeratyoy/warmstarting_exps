@@ -13,9 +13,6 @@ default_axes_args:
   x_scale: log
 
 # Figure level plotting
-figsize:
-  - 10
-  - 6
 nrows: 2
 ncols: 2
 global_legend: true # One legend for all axes, will deactivate legends of axis
@@ -44,6 +41,10 @@ axes:
       y_scale: log
       x_scale: log
       subtitle: null # str | None = None
+      seeds:
+        - 222
+        - 444
+        - 666
   0,1:
     sharex: null # the key of the axes which will share the x-axis with this one
     sharey: null # the key of the axes which will share the y-axis with this one
@@ -64,6 +65,10 @@ axes:
       y_scale: log
       x_scale: log
       subtitle: bloop # str | None = None
+      seeds:
+        - 222
+        - 444
+        - 666
   1,1:
     sharex: 0,0
     sharey: 0,0
@@ -82,3 +87,7 @@ axes:
       y_scale: log
       x_scale: log
       subtitle: null # str | None = None
+      seeds:
+        - 222
+        - 444
+        - 666

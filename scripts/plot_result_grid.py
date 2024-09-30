@@ -1,4 +1,5 @@
 import argparse
+import functools
 import copy
 from pathlib import Path
 from saws.plot_results import plot_results
@@ -15,7 +16,8 @@ def plot_grid(config_file: str | Path):
     global_xlabel = config['global_xlabel']
     global_ylabel = config['global_ylabel']
 
-    fig = plt.figure(layout='constrained', figsize=config['figsize'])
+    figsize = (config['ncols'] * 4, config['nrows'] * 3)
+    fig = plt.figure(layout='constrained', figsize=figsize)
     gs = fig.add_gridspec(config['nrows'], config['ncols'], wspace=0.05, hspace=0.05)
     sns.set_context(config['sns_context'])
 
@@ -55,15 +57,17 @@ def plot_grid(config_file: str | Path):
         if global_ylabel is not None:
             plotting_function_args['remove_y_labels'] = True
 
-        plot_results(ax, **plotting_function_args)
+        plot_results(ax=ax, **plotting_function_args)
 
     if global_xlabel is not None:
         fig.supxlabel(global_xlabel)
     if global_ylabel is not None:
         fig.supylabel(global_ylabel)
     if global_legend:
-        fig.legend(loc='outside upper center', ncol=8, borderaxespad=0.1) # need this if we have figure x axis
-        # fig.legend(loc='outside lower center', ncol=8)
+        legend_handels_labels = [list(zip(*ax.get_legend_handles_labels())) for ax in axes.values()]
+        legend_handels_labels = functools.reduce(lambda a, b: a+b, legend_handels_labels)
+        unique = dict([(label, handle) for (handle, label) in legend_handels_labels])
+        fig.legend(unique.values(), unique.keys(), loc='outside upper center', ncol=8, borderaxespad=0.1) 
 
     plt.show()
     plt.close(fig)
