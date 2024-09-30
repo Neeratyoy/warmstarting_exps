@@ -15,6 +15,8 @@ default_axes_args:
 # Figure level plotting
 nrows: 2
 ncols: 5
+nrows_plots: 2 # To determine plot size if subplots span multiple columns or rows. If None, will be set to nrows
+ncols_plots: 2 # To determine plot size if subplots span multiple columns or rows. If None, will be set to ncols
 global_legend: true # One legend for all axes, will deactivate legends of axis
 global_legend_ncols: 5 # Number of columns in the global legend
 global_xlabel: null # One x-axis label for all, will deactivate labels of subplots
@@ -71,8 +73,8 @@ axes:
         - 444
         - 666
   1,1:3:
-    sharex: 0,0
-    sharey: 0,0
+    sharex: null
+    sharey: null
     plotting_function_args:
       results_dirs: # list[str]
         - /work/dlclarge1/mallik-warmstarting/warmstarting_exps/results/workshop/slimpajama/mup/scale0_scale4

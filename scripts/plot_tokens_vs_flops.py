@@ -94,7 +94,7 @@ def plot_tokens_vs_flops(
     ax.text(x=ax.get_xlim()[1], y=compute[-1]*1.025, s='max FLOPs', color='black', ha='right', va='bottom')
 
     y_lim = ax.get_ylim()
-    ax.vlines(x=vlines_x, ymin=ax.get_ylim()[0], ymax=compute[-1], color=colors, linestyle=':', linewidth=2, zorder=2)
+    ax.vlines(x=vlines_x, ymin=ax.get_ylim()[0], ymax=compute[-1], color=colors, linestyle=':', linewidth=2, zorder=0)
     ax.set_ylim(y_lim)
 
 def get_args():

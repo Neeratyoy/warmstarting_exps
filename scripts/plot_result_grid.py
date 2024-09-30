@@ -16,10 +16,20 @@ def plot_grid(config_file: str | Path):
 
     default_axes_args = config["default_axes_args"]
     global_legend = 'global_legend' in config and config['global_legend']
+    remove_duplicate_legend_entries = 'remove_duplicate_legend_entries' in config and config['remove_duplicate_legend_entries']
+    recompute_results = 'recompute_results' in config and config['recompute_results']
     global_xlabel = config['global_xlabel']
     global_ylabel = config['global_ylabel']
 
     figsize = (config['ncols'] * 4, config['nrows'] * 3)
+    if 'ncols_plots' in config and config['ncols_plots'] is not None:
+        figsize = config['ncols_plots'] * 4, figsize[1]
+    if 'nrows_plots' in config and config['nrows_plots'] is not None:
+        figsize = figsize[0], config['nrows_plots'] * 3
+    
+    if global_legend:
+        figsize = figsize[0], figsize[1] + 0.5
+    
     fig = plt.figure(layout='constrained', figsize=figsize)
     gs = fig.add_gridspec(config['nrows'], config['ncols'], wspace=0.05, hspace=0.05)
     sns.set_context(config['sns_context'])
@@ -51,6 +61,7 @@ def plot_grid(config_file: str | Path):
             if 'styles' not in ax_config["plotting_function_args"]:
                 ax_config["plotting_function_args"]["styles"] = [{} for _ in range(
                     len(ax_config["plotting_function_args"]["results_dirs"]))]
+            ax_config["plotting_function_args"]["recompute_results"] = recompute_results 
             plotting_function_args = copy.deepcopy(default_axes_args)
 
         plotting_function_args.update(ax_config["plotting_function_args"])
@@ -75,8 +86,13 @@ def plot_grid(config_file: str | Path):
         legend_handels_labels = [list(zip(*ax.get_legend_handles_labels())) for ax in axes.values()]
         legend_handels_labels = functools.reduce(lambda a, b: a + b, legend_handels_labels)
         unique = dict([(label, handle) for (handle, label) in legend_handels_labels])
-        fig.legend(unique.values(), unique.keys(), loc='outside upper center', ncol=config['global_legend_ncols'],
-                   borderaxespad=0.1)
+        
+        if 'global_xlabel' not in config or config['global_ylabel'] is None:
+            fig.legend(unique.values(), unique.keys(), loc='outside lower center', ncol=config['global_legend_ncols'], 
+                    borderaxespad=0.1)
+        else:
+            fig.legend(unique.values(), unique.keys(), loc='outside upper center', ncol=config['global_legend_ncols'],
+                    borderaxespad=0.1)
 
     plt.show()
     plt.close(fig)
@@ -84,6 +100,8 @@ def plot_grid(config_file: str | Path):
     output_dir.mkdir(exist_ok=True, parents=True)
     fig.savefig(output_dir / f"{config['file_name']}.png")
     fig.savefig(output_dir / f"{config['file_name']}.pdf")
+
+    print(f"Saved figure to {output_dir / config['file_name']}.png")
     # determine the grid size
 
 
