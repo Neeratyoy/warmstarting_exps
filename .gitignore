@@ -1,5 +1,6 @@
 # file directories
 
+*.egg-info
 *results*/
 *data*/
 *ouptut*/

@@ -1,25 +1,27 @@
-[tool.poetry]
+[project]
 name = "warms"
 version = "0.1.0"
 description = "Experiment repository for warmstarting LLMs"
 authors = [
-    "Neeratyoy Mallik <mallik@cs.uni-freiburg.de>",
-    "Maciej Janowski <janowski@cs.uni-freiburg.de>",
-    "Johannes Hog <hogj@cs.uni-freiburg.de>",
-    "Herilalaina Rakotoarison <rakotoah@cs.uni-freiburg.de>",
+    {name = "Neeratyoy Mallik", email = "mallik@cs.uni-freiburg.de"},
+    {name = "Maciej Janowski", email = "janowski@cs.uni-freiburg.de"},
+    {name = "Johannes Hog", email = "hogj@cs.uni-freiburg.de"},
+    {name = "Herilalaina Rakotoarison", email = "rakotoah@cs.uni-freiburg.de"},
 ]
-license = "MIT"
+license = {text = "MIT"}
 readme = "README.md"
-packages = [
-    { include = "warms" },
+requires-python = ">=3.9,<3.12"
+dependencies = [
+    "numpy>=1.0,<2.0",
+    "toml>=0.10.2,<0.11.0",
 ]
 
-[tool.poetry.dependencies]
-python = "^3.9, <3.12"
-# Poetry insists on this https://github.com/python-poetry/poetry/issues/8823
-numpy = "^1.0"  # to prevent 2.0 from being installed
-toml = "^0.10.2"
+[project.urls]
+repository = "https://github.com/yourusername/warms"
 
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ["setuptools>=61", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["warms"]
