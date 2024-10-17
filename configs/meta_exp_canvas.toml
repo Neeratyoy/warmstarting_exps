@@ -2,21 +2,21 @@
 
 [global]
 env_name = "warm_env_global"
-workspace_path = "/work/dlclarge1/mallik-warmstarting/"
-setup_script_path = "/work/dlclarge1/mallik-warmstarting/misc/setup_script.sh"
-env_path="/work/dlclarge1/mallik-warmstarting/envs/"
-venv_template_path = "/work/dlclarge1/mallik-warmstarting/venv_templates/"
+workspace_path = "/work/dlclarge2/mallik-wann-grammar/"
+setup_script_path = "/work/dlclarge2/mallik-wann-grammar/venv_templates/setup.sh"
+env_path="/work/dlclarge2/mallik-wann-grammar/envs/"
+venv_template_path = "/work/dlclarge2/mallik-wann-grammar/venv_templates/"
 
-env_root = "/work/dlclarge1/mallik-warmstarting/envs/"
-data_root = "/work/dlclarge1/mallik-warmstarting/scale_and_warmstart/data/"
-data_handler_root = "/work/dlclarge1/mallik-warmstarting/warmstarting_exps/configs/data_handlers/"
-saws_root = "/work/dlclarge1/mallik-warmstarting/scale_and_warmstart/"
-warms_root = "/work/dlclarge1/mallik-warmstarting/warmstarting_exps/"
+env_root = "/work/dlclarge2/mallik-wann-grammar/envs/"
+data_root = "/work/dlclarge2/mallik-wann-grammar/scale_and_warmstart/data/"
+data_handler_root = "/work/dlclarge2/mallik-wann-grammar/warmstarting_exps/configs/data_handlers/"
+saws_root = "/work/dlclarge2/mallik-wann-grammar/scale_and_warmstart/"
+warms_root = "/work/dlclarge2/mallik-wann-grammar/warmstarting_exps/"
 
-results_root = "/work/dlclarge1/mallik-warmstarting/warmstarting_exps/results/"
-slurm_logs_root = "/work/dlclarge1/mallik-warmstarting/warmstarting_exps/slurm_logs/"
+results_root = "/work/dlclarge2/mallik-wann-grammar/warmstarting_exps/results"
+slurm_logs_root = "/work/dlclarge2/mallik-wann-grammar/warmstarting_exps/slurm_logs/"
 
-train_template = "/work/dlclarge1/mallik-warmstarting/warmstarting_exps/configs/train_template.yaml"
+train_template = "/work/dlclarge2/mallik-wann-grammar/warmstarting_exps/configs/train_template.yaml"
 mup_base_root = "/work/dlclarge1/mallik-warmstarting/warmstarting_exps/configs/width_only/mup"
 
 
@@ -66,3 +66,13 @@ results_root = "/Users/hogj/Documents/warmstarting/warmstarting_exps/results"
 slurm_logs_root = "/work/dlclarge1/mallik-warmstarting/warmstarting_exps/misc/neeratyoy/exps/slurm_logs/"
 
 train_template = "/Users/hogj/Documents/warmstarting/warmstarting_exps/configs/train_template.yaml"
+
+[timur]
+env_name = "timur_env"
+saws_root = "/work/dlclarge2/mallik-wann-grammar/scale_and_warmstart/"
+warms_root = "/work/dlclarge2/mallik-wann-grammar/warmstarting_exps/"
+data_handler_root = "/work/dlclarge2/mallik-wann-grammar/warmstarting_exps/configs/data_handlers"
+
+slurm_logs_root = "/work/dlclarge2/mallik-wann-grammar/warmstarting_exps/slurm_logs"
+
+

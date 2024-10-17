@@ -3,7 +3,7 @@
 base_path=$(dirname "$0")  # reads the file's parent directory
 
 dataset="wikitext"
-name="neeratyoy"  # load the relevant canvas settings
+name="timur"  # load the relevant canvas settings
 exp_tree="test_run/wikitext/warm_snp"  # change the experiment subdirectory name
 
 python ${base_path}"/../../warms/run_main.py" \
