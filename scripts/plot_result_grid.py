@@ -16,8 +16,6 @@ def plot_grid(config_file: str | Path):
 
     default_axes_args = config["default_axes_args"]
     global_legend = 'global_legend' in config and config['global_legend']
-    remove_duplicate_legend_entries = 'remove_duplicate_legend_entries' in config and config['remove_duplicate_legend_entries']
-    recompute_results = 'recompute_results' in config and config['recompute_results']
     global_xlabel = config['global_xlabel']
     global_ylabel = config['global_ylabel']
 
@@ -61,7 +59,6 @@ def plot_grid(config_file: str | Path):
             if 'styles' not in ax_config["plotting_function_args"]:
                 ax_config["plotting_function_args"]["styles"] = [{} for _ in range(
                     len(ax_config["plotting_function_args"]["results_dirs"]))]
-            ax_config["plotting_function_args"]["recompute_results"] = recompute_results 
             plotting_function_args = copy.deepcopy(default_axes_args)
 
         plotting_function_args.update(ax_config["plotting_function_args"])
@@ -73,13 +70,17 @@ def plot_grid(config_file: str | Path):
         if global_ylabel is not None:
             plotting_function_args['remove_y_labels'] = True
 
+        print(f"Plotting {ax_key}")
+
         if 'function' not in ax_config or ax_config['function'] == 'plot_results':
             plot_results(ax=ax, **plotting_function_args)
         elif ax_config['function'] == 'plot_tokens_vs_flops':
             plot_tokens_vs_flops(ax=ax, **plotting_function_args)
 
     if global_xlabel is not None:
-        fig.supxlabel(global_xlabel)
+        # fig.supxlabel(global_xlabel)
+        _label = fig.supxlabel(global_xlabel)
+        _label.set_fontsize(28)
     if global_ylabel is not None:
         fig.supylabel(global_ylabel)
     if global_legend:
@@ -87,12 +88,17 @@ def plot_grid(config_file: str | Path):
         legend_handels_labels = functools.reduce(lambda a, b: a + b, legend_handels_labels)
         unique = dict([(label, handle) for (handle, label) in legend_handels_labels])
         
-        if 'global_xlabel' not in config or config['global_ylabel'] is None:
+        if 'global_xlabel' not in config or config['global_xlabel'] is None:
             fig.legend(unique.values(), unique.keys(), loc='outside lower center', ncol=config['global_legend_ncols'], 
                     borderaxespad=0.1)
         else:
             fig.legend(unique.values(), unique.keys(), loc='outside upper center', ncol=config['global_legend_ncols'],
                     borderaxespad=0.1)
+    ##########
+    # WARNING:
+    # custom temp
+    # handles, labels = ax.get_legend_handles_labels()
+    # fig.legend(handles, labels, loc='lower center', bbox_to_anchor=(-1.5, -1.5), ncol=5, fontsize=25)
 
     plt.show()
     plt.close(fig)
