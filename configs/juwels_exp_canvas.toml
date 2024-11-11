@@ -1,0 +1,24 @@
+# the `global` at all times must be a union of all other environments' listed variables
+
+[global]
+env_name = "warm_env_global"
+workspace_path = "/p/project1/projectnucleus/mallik2/warmstarting/"
+setup_script_path = "/p/project1/projectnucleus/mallik2/warmstarting/misc/setup_script.sh"
+env_path="/p/project1/projectnucleus/mallik2/warmstarting/envs/"
+venv_template_path = "/p/project1/projectnucleus/mallik2/warmstarting/venv_templates/"
+
+env_root = "/p/project1/projectnucleus/mallik2/warmstarting/envs/"
+data_root = "/p/project1/projectnucleus/mallik2/warmstarting/scale_and_warmstart/data/"
+data_handler_root = "/p/project1/projectnucleus/mallik2/warmstarting/warmstarting_exps/configs/data_handlers/"
+saws_root = "/p/project1/projectnucleus/mallik2/warmstarting/scale_and_warmstart/"
+warms_root = "/p/project1/projectnucleus/mallik2/warmstarting/warmstarting_exps/"
+
+results_root = "/p/project1/projectnucleus/mallik2/warmstarting/warmstarting_exps/results/"
+slurm_logs_root = "/p/project1/projectnucleus/mallik2/warmstarting/warmstarting_exps/slurm_logs/"
+
+train_template = "/p/project1/projectnucleus/mallik2/warmstarting/warmstarting_exps/configs/train_template.yaml"
+mup_base_root = "/p/project1/projectnucleus/mallik2/warmstarting/warmstarting_exps/configs/width_only/mup"
+
+[neeratyoy]
+env_name = "nyoy-env"
+
