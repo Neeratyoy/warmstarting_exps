@@ -31,6 +31,9 @@ warmup_fraction: null
 cooldown_fraction: null
 cooldown_type: linear
 
+parameterization_type: null
+parameterization_full_align: false
+
 independent_wd: true
 weight_decay: 0
 weight_init_type: null
