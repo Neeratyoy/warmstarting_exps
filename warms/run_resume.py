@@ -45,6 +45,54 @@ def update_config(
     return config
 
 
+def main(
+    path: Path,
+    tokens_per_param: int,
+    max_tokens: int,
+    max_train_steps: int,
+    overwrite: bool,
+    dataset: str = "slimpajama",
+    canvas_access: str = "global",
+):
+    assert (
+        (tokens_per_param or 0) +
+        (max_tokens or 0) +
+        (max_train_steps or 0)
+    ), "One of tokens_per_param, max_tokens, or max_train_steps must be provided."
+
+    assert (
+        bool(tokens_per_param or 0) +
+        bool(max_tokens or 0) +
+        bool(max_train_steps or 0)
+    ) == 1, "Only one of tokens_per_param, max_tokens, or max_train_steps must be provided."
+
+    train_config = update_config(
+        path=Path(path),
+        tokens_per_param=tokens_per_param,
+        max_tokens=max_tokens,
+        max_train_steps=max_train_steps,
+        overwrite=overwrite,
+    )
+
+    # Setting experiment canvas for path management
+    canvas = ExpCanvas(CANVAS_BASE_PATH, canvas_access)
+    data_config = prepare_data_handler_from_file(
+        data_config_path=canvas.data_handler_root / DATASET_MAP(dataset),
+        train_config=train_config,
+        root_data_path=canvas.data_root
+    )
+
+    # Running
+    fabric = L.Fabric(devices="auto", strategy="auto")
+    result_dict = main(
+        fabric=fabric,
+        data=data_config,
+        train_args=train_config,
+        out_dir=train_config.save_state_path
+    )
+    return result_dict
+
+
 def get_args():
     parser = argparse.ArgumentParser(description="Parser for generating MuP base files")
 
@@ -93,40 +141,13 @@ def get_args():
 if __name__ == "__main__":
     args = get_args()
 
-    assert (
-        (args.tokens_per_param or 0) +
-        (args.max_tokens or 0) +
-        (args.max_train_steps or 0)
-    ), "One of tokens_per_param, max_tokens, or max_train_steps must be provided."
-
-    assert (
-        bool(args.tokens_per_param or 0) +
-        bool(args.max_tokens or 0) +
-        bool(args.max_train_steps or 0)
-    ) == 1, "Only one of tokens_per_param, max_tokens, or max_train_steps must be provided."
-
-    train_config = update_config(
-        path=Path(args.path),
+    main(
+        path=args.path,
         tokens_per_param=args.tokens_per_param,
         max_tokens=args.max_tokens,
         max_train_steps=args.max_train_steps,
         overwrite=args.overwrite,
-    )
-
-    # Setting experiment canvas for path management
-    canvas = ExpCanvas(CANVAS_BASE_PATH, args.canvas_access)
-    data_config = prepare_data_handler_from_file(
-        data_config_path=canvas.data_handler_root / DATASET_MAP(args.dataset),
-        train_config=train_config,
-        root_data_path=canvas.data_root
-    )
-
-    # Running
-    fabric = L.Fabric(devices="auto", strategy="auto")
-    result_dict = main(
-        fabric=fabric,
-        data=data_config,
-        train_args=train_config,
-        out_dir=train_config.save_state_path
+        dataset=args.dataset,
+        canvas_access=args.canvas_access,
     )
 # end of file
