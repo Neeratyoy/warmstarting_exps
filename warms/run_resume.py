@@ -45,7 +45,7 @@ def update_config(
     return config
 
 
-def main(
+def main_wrapper(
     path: Path,
     tokens_per_param: int,
     max_tokens: int,
@@ -141,7 +141,7 @@ def get_args():
 if __name__ == "__main__":
     args = get_args()
 
-    main(
+    main_wrapper(
         path=args.path,
         tokens_per_param=args.tokens_per_param,
         max_tokens=args.max_tokens,
