@@ -7,6 +7,7 @@ from saws.plot_results import NAMES_DICT, COLOR_DICT
 from scripts.utils import calculate_token_per_param, get_number_of_model_parameters
 import seaborn as sns
 import numpy as np
+
 BASE_MODEL_TOKENS_PER_PARAM = 20
 
 
@@ -14,6 +15,7 @@ def plot_tokens_vs_flops(
         ax: plt.Axes,
         run_names: list[str],
         scales: list[str],
+        scale_weightings: list[str | None],
         warmstart_schedules: list[str],
         remove_x_labels: bool = False,
         remove_y_labels: bool = False,
@@ -21,9 +23,14 @@ def plot_tokens_vs_flops(
         tokens_per_param_target_model: float = 20,
         block: int = 1024,
         depth: int = 6,
+        **kwargs,
 ):
     assert len(set([scale.split("-")[0] for scale in scales])) == 1, "The first scale of all runs must be the same."
     assert len(set([scale.split("-")[-1] for scale in scales])) == 1, "The last scale of all runs must be the same."
+    assert len(run_names) == len(scales) == len(scale_weightings) == len(warmstart_schedules), (
+        "The number of run names, scales, scale weightings and warmstart schedules must match."
+    )
+
     model_root = Path(__file__).parent.parent / 'configs' / 'width_only' / 'dev'
     base_tokens = BASE_MODEL_TOKENS_PER_PARAM * get_number_of_model_parameters(model_root, block, depth,
                                                                                int(scales[0].split("-")[0]))
@@ -31,11 +38,19 @@ def plot_tokens_vs_flops(
     vlines_x = []
     colors = sns.color_palette("deep", n_colors=len(run_names))
     # ax.grid(axis='x', linestyle='')
-    for idx, (run_name, scale, warmstart_schedule) in enumerate(zip(run_names, scales, warmstart_schedules)):
+    for idx, (run_name, scale, scale_weighting, warmstart_schedule) in enumerate(
+            zip(run_names, scales, scale_weightings, warmstart_schedules)):
+
         scale = [int(s) for s in scale.split("-")]
         if warmstart_schedule == "same_tokens":
+            if scale_weighting is None:
+                scale_weighting = [1.0] * (len(scale)-1)
+            else:
+                scale_weighting = [float(w) for w in scale_weighting.split("-")]
+
             tokens_per_param = calculate_token_per_param(
                 tokens_per_param_target_model=tokens_per_param_target_model,
+                scale_weighting=scale_weighting,
                 block=block,
                 depth=depth,
                 scales=scale,
@@ -44,9 +59,9 @@ def plot_tokens_vs_flops(
             )
             tokens = [base_tokens]
             compute = [0]
-            for s in scale[1:]:
+            for t, s in zip(tokens_per_param, scale[1:]):
                 parameters_current_scale = get_number_of_model_parameters(model_root, block, depth, s)
-                tokens_current_scale = tokens_per_param * parameters_current_scale
+                tokens_current_scale = t * parameters_current_scale
                 compute_current_scale = 6 * tokens_current_scale * parameters_current_scale  # 6N*D for flops
                 tokens.append(tokens[-1] + tokens_current_scale)
                 compute.append(compute[-1] + compute_current_scale)
@@ -80,7 +95,7 @@ def plot_tokens_vs_flops(
         vlines_x.append(tokens[-1])
 
     if not remove_x_labels:
-        ax.set_xlabel("tokens")
+        ax.set_xlabel("Tokens")
     if not remove_y_labels:
         ax.set_ylabel("FLOPs")
     if not remove_legend:
@@ -91,11 +106,12 @@ def plot_tokens_vs_flops(
     sns.despine(ax=ax, top=True, right=True)
 
     ax.axhline(y=compute[-1], color='black', linestyle='-', linewidth=2, zorder=1)
-    ax.text(x=ax.get_xlim()[1], y=compute[-1]*1.025, s='max FLOPs', color='black', ha='right', va='bottom')
+    ax.text(x=ax.get_xlim()[1], y=compute[-1] * 1.025, s='max FLOPs', color='black', ha='right', va='bottom')
 
     y_lim = ax.get_ylim()
     ax.vlines(x=vlines_x, ymin=ax.get_ylim()[0], ymax=compute[-1], color=colors, linestyle=':', linewidth=2, zorder=0)
     ax.set_ylim(y_lim)
+
 
 def get_args():
     parser = argparse.ArgumentParser(

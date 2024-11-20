@@ -7,6 +7,7 @@ import yaml
 from matplotlib import pyplot as plt
 import seaborn as sns
 
+from scripts.plot_successive_schedule import plot_warmstarting_schedules
 from scripts.plot_tokens_vs_flops import plot_tokens_vs_flops
 
 
@@ -76,6 +77,8 @@ def plot_grid(config_file: str | Path):
             plot_results(ax=ax, **plotting_function_args)
         elif ax_config['function'] == 'plot_tokens_vs_flops':
             plot_tokens_vs_flops(ax=ax, **plotting_function_args)
+        elif ax_config['function'] == 'plot_warmstarting_schedules':
+            plot_warmstarting_schedules(ax=ax, **plotting_function_args)
 
     if global_xlabel is not None:
         # fig.supxlabel(global_xlabel)

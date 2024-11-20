@@ -32,11 +32,12 @@ def get_number_of_model_parameters(model_root: Path, block: int, depth: int, sca
     return num_parameters(GPT_Scales(model_config), requires_grad=True)
 
 def calculate_token_per_param(tokens_per_param_target_model: int | float,
+                              scale_weighting: list[float],
                               block: int,
                               depth: int,
                               scales: list[int],
                               model_root: Path,
-                              include_lowest_scale: bool) -> float:
+                              include_lowest_scale: bool) -> list[float]:
     """
     We use the same number of tokens per parameter for every model and match the total number of flops
     of the entire warmstarting chain with the total number of flops of the target model.
@@ -51,10 +52,10 @@ def calculate_token_per_param(tokens_per_param_target_model: int | float,
         parameters_base_models.append(get_number_of_model_parameters(model_root, block, depth, scale) ** 2)
 
     parameters_target_model = parameters_base_models[-1]
-    parameters_base_models_sum = sum(parameters_base_models)
+    weighted_parameters_base_models_sum = sum([p*w for p, w in zip(parameters_base_models, scale_weighting)])
 
-    tokens_per_param = parameters_target_model / parameters_base_models_sum * tokens_per_param_target_model
-    return tokens_per_param
+    tokens_per_param = parameters_target_model / weighted_parameters_base_models_sum * tokens_per_param_target_model
+    return [tokens_per_param * scale_weight for scale_weight in scale_weighting]
 
 
 if __name__ == "__main__":

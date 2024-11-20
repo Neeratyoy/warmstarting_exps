@@ -61,7 +61,7 @@ train_template = "/work/dlclarge1/mallik-warmstarting/misc/johannes/warmstarting
 saws_root = "/Users/hogj/Documents/warmstarting/scale_and_warmstart"
 warms_root = "/Users/hogj/Documents/warmstarting/warmstarting_exps"
 data_handler_root = "/Users/hogj/Documents/warmstarting/warmstarting_exps/configs/data_handlers"
-
+data_root = "/Users/hogj/Documents/warmstarting/scale_and_warmstart/data"
 results_root = "/Users/hogj/Documents/warmstarting/warmstarting_exps/results"
 slurm_logs_root = "/work/dlclarge1/mallik-warmstarting/warmstarting_exps/misc/neeratyoy/exps/slurm_logs/"
 
