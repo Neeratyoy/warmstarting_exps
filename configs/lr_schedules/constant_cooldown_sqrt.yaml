@@ -1,0 +1,7 @@
+warmup_fraction: 0.
+scheduler_type: constant
+scheduler_args: null
+scheduler_lr_decay_factor: 0.
+cooldown_fraction: 0.2
+cooldown_type: sqrt
+cooldown_lr_decay_factor: 0.01

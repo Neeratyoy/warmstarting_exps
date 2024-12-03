@@ -102,6 +102,12 @@ def get_args():
         type=int,
         default=None,
         help="The micro batch size for the base scale"
+    )    
+    parser.add_argument(
+        "--lr_schedule_path",
+        type=str,
+        default=None,
+        help="The path to the LR schedule yaml file"
     )
 
     return parser.parse_args()
@@ -123,6 +129,9 @@ if __name__ == "__main__":
     with (canvas.train_template if args.train_template is None else Path(args.train_template)).open(
             encoding="utf-8") as yaml_file:
         train_config = yaml.safe_load(yaml_file)
+    if args.lr_schedule_path:
+        with Path(args.lr_schedule_path).open(encoding="utf-8") as yaml_file:
+            lr_schedule = yaml.safe_load(yaml_file)
     
     if args.micro_batch_size is not None:            
         train_config["micro_batch_size"] = args.micro_batch_size
@@ -145,6 +154,12 @@ if __name__ == "__main__":
 
     # adjusting for warmstarting
     train_config = warmstart_parser(args, train_config)
+
+    # adjusting LR schedule, if provided
+    if args.lr_schedule_path:
+        for key, value in lr_schedule.items():
+            train_config[key] = value
+
     train_config["seed"] = args.seed
     train_config = TrainConfig(**train_config)
 
