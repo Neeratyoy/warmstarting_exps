@@ -17,3 +17,12 @@ __pycache__/
 *.parquet.gzip
 *.csv
 *.json
+
+
+# playground cases
+playground/*.png
+playground/*.pdf
+playground/*.csv
+playground/*.pt
+playground/*.pth
+playground/*ipynb*
