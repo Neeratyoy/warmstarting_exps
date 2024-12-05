@@ -1,9 +1,10 @@
 bias: true
 block_size: 1024
-n_embd: 48  # scale0
+n_embd: 64  # scale0
 n_head: 2  # scale0
-# head_size = n_embd // n_head = 48 // 2 = 24
-n_layer: 12  
+# head_size = n_embd // n_head = 8 // 1 = 8
+n_layer: 3
 n_query_groups: null
 norm_class_name: LayerNorm
 vocab_size: 50257
+max_micro_batch_size: 12
