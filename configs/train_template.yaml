@@ -67,8 +67,8 @@ tracked_metrics:
   mean_l2_weight_norm: 5
   train_loss: 1
   validation_loss: 1
-  weight_spectra_diff: 100
-  weight_spectra_max: 100
+  weight_spectra_diff: 1000
+  weight_spectra_max: 1000
   z_loss: 5
 
 max_tokens: null
