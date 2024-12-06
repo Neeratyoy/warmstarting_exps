@@ -19,6 +19,17 @@ slurm_logs_root = "/work/dlclarge1/mallik-warmstarting/warmstarting_exps/slurm_l
 train_template = "/work/dlclarge1/mallik-warmstarting/warmstarting_exps/configs/train_template.yaml"
 mup_base_root = "/work/dlclarge1/mallik-warmstarting/warmstarting_exps/configs/width_only/mup"
 
+[neeratyoy-2]
+env_name = "nyoy_env"
+
+saws_root = "/work/dlclarge2/mallik-warmstarting-2/misc/neeratyoy/code/scale_and_warmstart/"
+warms_root = "/work/dlclarge2/mallik-warmstarting-2/misc/neeratyoy/code/warmstarting_exps/"
+data_handler_root = "/work/dlclarge2/mallik-warmstarting-2/misc/neeratyoy/code/warmstarting_exps/configs/data_handlers/"
+results_root = "/work/dlclarge2/mallik-warmstarting-2/warmstarting_exps/results"
+slurm_logs_root = "/work/dlclarge2/mallik-warmstarting-2/misc/neeratyoy/exps/slurm_logs/"
+
+train_template = "/work/dlclarge2/mallik-warmstarting-2/misc/neeratyoy/code/warmstarting_exps/configs/train_template.yaml"
+#
 
 [neeratyoy]
 env_name = "nyoy_env"
