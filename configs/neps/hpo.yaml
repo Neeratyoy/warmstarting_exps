@@ -1,0 +1,18 @@
+pipeline_space:
+  micro_batch_size:
+    lower: 16
+    upper: 1024
+    log: True
+  max_lr:
+    lower: 0.0001
+    upper: 0.03
+    log: True
+  tokens_per_param: 20
+  early_stopping_max_train_steps:
+    lower: 2.5
+    upper: 20.0
+    is_fidelity: true
+max_evaluations_total: 100
+searcher:
+  strategy: "hyperband"
+  eta: 2

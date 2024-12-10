@@ -1,6 +1,43 @@
 """
+This script is used to run NePS based on the given train template, dataset and NePS yaml configuration.
 
+Example usage for running a grid search on the learning rate for the slimpajama dataset:
 
+python warms/run_neps.py \
+    --neps_config_path <root_path>/configs/neps/lr_grid_search.yaml \
+    --dataset slimpajama \
+    --output_tree neps/quick_debug \
+    --neps_seed 123 \
+    --target_scale <path_to_target_scale_config>
+
+```lr_grid_search.yaml
+pipeline_space:
+  max_lr:
+    choices: [0.03, 0.01, 0.003, 0.001, 0.0003, 0.0001]
+max_evaluations_total: 6
+```
+
+Note, if multi-fidelity is being used, the runtime parameter used as fidelity needs to provided as a constant
+to indicate the total runtime. Additionally, it needs to be provided as a hyperparameter while using the prefix
+`early_stopping_` to control the fidelity brackets. This is needed for the lr scheduling to work correctly.
+
+See the example below for a multi-fidelity hyperband search:
+```
+pipeline_space:
+  max_lr:
+    lower: 0.0001
+    upper: 0.03
+    log: True
+  tokens_per_param: 20
+  early_stopping_tokens_per_param:
+    lower: 2.5
+    upper: 20.0
+    is_fidelity: true
+max_evaluations_total: 100
+searcher:
+  strategy: "hyperband"
+  eta: 2
+```
 """
 
 import argparse
@@ -22,6 +59,9 @@ from warms import (
 import lightning as L
 from saws.config.yaml_utils import path_constructor
 from saws import TrainConfig, main
+from neps.optimizers.grid_search.optimizer import GridSearch
+
+from scale_and_warmstart.saws.pretrain import train
 
 
 def set_seed(seed: int):
@@ -59,6 +99,12 @@ def get_args():
         choices=["wikitext", "slimpajama"]
     )
     parser.add_argument(
+        "--output_tree",
+        type=str,
+        help="Creates a subdirectory tree starting from `results_root` in canvas configuration and uses it as the neps output directory. "
+             "If not provided the `root_directory` in the config .yaml will be used. If both are given, an error will be raised.",
+    )
+    parser.add_argument(
         "--target_scale",
         type=str,
         help="Path to the config file for the model at the target scale. "
@@ -70,6 +116,11 @@ def get_args():
         default=123,
         help="The seed used by the neps optimizer.",
     )
+    # Grid search is not a valid literal as a searcher for neps 12.2 and can't be specified in the yaml so it has to be passed as an argument.
+    parser.add_argument('--grid_search',
+                        action='store_true',
+                        help='Does grid search instead of the default search.')
+
     return parser.parse_args()
 
 
@@ -82,9 +133,13 @@ def neps_training_wrapper(args: argparse.Namespace) -> Callable:
 
     def run_pipeline(pipeline_directory: Path, previous_pipeline_directory: Path, **config) -> dict:
         """
-        Run the pipeline with the given configuration
-        :param config:
-        :return:
+        Runs the pipeline with the given neps configuration and the arguments from the wrapper function.
+        Supports resuming the pipeline from a previous pipeline directory to speed up multi-fidelity HPO.
+
+        :param pipeline_directory: The directory where the information of the current pipeline is saved.
+        :param previous_pipeline_directory: The directory from which the pipeline will be resumed if multifidelity is used.
+        :param config: The hyperparameters and constants to be used in the pipeline.
+        :return: loss at the end of training
         """
         canvas = ExpCanvas(CANVAS_BASE_PATH, args.canvas_access)
 
@@ -114,6 +169,13 @@ def neps_training_wrapper(args: argparse.Namespace) -> Callable:
                 if nested_key not in sub_dict or not isinstance(sub_dict[nested_key], dict):
                     sub_dict[nested_key] = {}
                 sub_dict = sub_dict[nested_key]
+
+            # Setting all training time arguments except the given one to None since we can't pass None constants via NePS.
+            trainings_time_arguments = ["tokens_per_param", "max_tokens", "max_train_steps"]
+            if key in trainings_time_arguments:
+                for tt_arg in trainings_time_arguments:
+                    sub_dict[tt_arg] = None
+
             sub_dict[key.split('.')[-1]] = value
 
         # Resume run from previous fidelity
@@ -144,7 +206,16 @@ if __name__ == "__main__":
     args = get_args()
 
     set_seed(args.neps_seed)
+
+    optional_args = {}
+    if args.output_tree is not None:
+        canvas = ExpCanvas(CANVAS_BASE_PATH, args.canvas_access)
+        optional_args["root_directory"] = canvas.results_root / args.output_tree
+    if args.grid_search:
+        optional_args["searcher"] = GridSearch
+
     neps.run(
         run_pipeline=neps_training_wrapper(args),
-        run_args=args.neps_config_path
+        run_args=args.neps_config_path,
+        **optional_args
     )
