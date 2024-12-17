@@ -1,3 +1,4 @@
+import argparse
 from pathlib import Path
 
 from saws.config.data_config import DataHandler, preprocess_wikitext
@@ -43,3 +44,33 @@ def prepare_data_handler_from_file(
     )
 
     return data_config
+
+
+def warmstart_parser(args: argparse.Namespace, train_config: dict) -> dict:
+    if args.warmstart:
+        train_config["warmstart_config"]["activate"] = True
+        if args.warmstart_type is not None:
+            train_config["warmstart_config"]["warmstart_type"] = args.warmstart_type
+
+        if args.base_model_step is not None:
+            if "warmstarting_args" not in train_config["warmstart_config"]:
+                train_config["warmstart_config"]["warmstarting_args"] = {}
+            train_config["warmstart_config"]["warmstarting_args"]["base_model_step"] = args.base_model_step
+
+        if args.warmstart_base_path is not None:
+            train_config["warmstart_config"]["base_model_path"] = args.warmstart_base_path
+        else:
+            assert train_config["warmstart_config"][
+                       "base_model_path"] is not None, "Base model path is required for warmstarting."
+
+        # Hyperparameters for warmstarting methods
+        if args.shrinking_factor is not None:
+            if "warmstarting_args" not in train_config["warmstart_config"]:
+                train_config["warmstart_config"]["warmstarting_args"] = {}
+            train_config["warmstart_config"]["warmstarting_args"]["shrinking_factor"] = args.shrinking_factor
+        if args.perturbation_sigma is not None:
+            if "warmstarting_args" not in train_config["warmstart_config"]:
+                train_config["warmstart_config"]["warmstarting_args"] = {}
+            train_config["warmstart_config"]["warmstarting_args"]["perturbation_sigma"] = args.perturbation_sigma
+
+    return train_config

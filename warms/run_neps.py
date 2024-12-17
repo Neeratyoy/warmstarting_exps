@@ -8,6 +8,7 @@ python warms/run_neps.py \
     --dataset slimpajama \
     --output_tree neps/quick_debug \
     --neps_seed 123 \
+    --grid_search \ # Only set this if you are using grid search!
     --target_scale <path_to_target_scale_config>
 
 ```lr_grid_search.yaml
@@ -17,9 +18,10 @@ pipeline_space:
 max_evaluations_total: 6
 ```
 
-Note, if multi-fidelity is being used, the runtime parameter used as fidelity needs to provided as a constant
+If multi-fidelity is being used, the runtime parameter used as fidelity needs to provided as a constant
 to indicate the total runtime. Additionally, it needs to be provided as a hyperparameter while using the prefix
 `early_stopping_` to control the fidelity brackets. This is needed for the lr scheduling to work correctly.
+Note that you can provide other attributes as constants in the yaml file as well.
 
 See the example below for a multi-fidelity hyperband search:
 ```
@@ -38,14 +40,19 @@ searcher:
   strategy: "hyperband"
   eta: 2
 ```
+
+Here, we are able to specify the search algorithm in the yaml file while we had pass it as an argument when using
+grid search. This is because grid search is not natively supported in NePS.
 """
 
 import argparse
+from functools import reduce
 from pathlib import Path
 from typing import Callable
 
 import neps
 import numpy as np
+import pandas as pd
 import torch
 import yaml
 import random
@@ -61,7 +68,9 @@ from saws.config.yaml_utils import path_constructor
 from saws import TrainConfig, main
 from neps.optimizers.grid_search.optimizer import GridSearch
 
-from saws.pretrain import train
+from warms.utils.support import warmstart_parser
+
+from scale_and_warmstart.saws.pretrain import train
 
 
 def set_seed(seed: int):
@@ -110,6 +119,30 @@ def get_args():
         help="Path to the config file for the model at the target scale. "
              "If not provided, the model config from the train template will be used.",
     )
+
+    # Warmstarting arguments
+    parser.add_argument(
+        "--warmstart",
+        action="store_true",
+        help="Set to true to overwrite the warmstarting values provided by train_template with argparse arguments.")
+    parser.add_argument("--warmstart_type", type=str)
+    parser.add_argument("--warmstart_base_path", type=str)
+    parser.add_argument("--base_model_step", type=int)
+    parser.add_argument("--shrinking_factor", type=float)
+    parser.add_argument("--perturbation_sigma", type=float)
+
+    parser.add_argument(
+        "--warmstart_neps_root_path",
+        type=str,
+        help="Specific to one kind of experiment: If you do a grid search and want to warmstart the model with a model "
+             "from a different grid search that has the same hyperparameters."
+             "Provide the root path of the neps output directory of the gridsearch you want to warmstart from.")
+
+    parser.add_argument(
+        "--mup_base_path",
+        type=str,
+        help="The path to the .bsh file for base muP scale. If not provided, sp will be used.",
+    )
     parser.add_argument(
         "--neps_seed",
         type=int,
@@ -121,7 +154,54 @@ def get_args():
                         action='store_true',
                         help='Does grid search instead of the default search.')
 
-    return parser.parse_args()
+    args = parser.parse_args()
+
+    if (args.warmstart_type is not None
+            or args.warmstart_base_path is not None
+            or args.base_model_step is not None
+            or args.shrinking_factor is not None
+            or args.perturbation_sigma is not None
+            or args.warmstart_neps_root_path is not None):
+        assert args.warmstart, "Warmstart arguments are provided but warmstart is not set to True."
+
+    return args
+
+
+def warmstart_from_neps(train_config: dict, warmstart_neps_root_path: str):
+    """
+    Modifies the train_config in such a way that. If the search spaces do not align there is a lot that can go wrong.
+    :param train_config:
+    :param config:
+    :param warmstart_neps_root_path:
+    """
+    if warmstart_neps_root_path is not None:
+        summary_path = Path(warmstart_neps_root_path) / "summary_csv" / "config_data.csv"
+        if not summary_path.exists():
+            raise ValueError(
+                "The summary .csv file does not exist. This might be because the NePS run did not finish successfully "
+                "for all configurations.")
+
+        summary = pd.read_csv(summary_path)
+
+        # Check if all the runs finished successfully, if not raise an error
+        if not all(summary["status"] == "complete"):
+            raise ValueError("Not all runs in the neps output directory finished successfully. "
+                             "Please make sure all runs are completed before using warmstart.")
+
+        # select all the columns that are hyperparameters (more than 1 unique value and start with "config.")
+        hp_columns = [col.removeprefix("config.") for col in summary.columns if
+                      col.startswith("config.") and summary[col].nunique() > 1]
+
+        # select the row that matches the train_config hp values
+        row_selection = [summary["config." + col] == train_config[col] for col in hp_columns]
+        row_selection = reduce(lambda x, y: x & y, row_selection)
+        config = summary["config_id"][row_selection]
+
+        assert len(config) == 1, "The warmstart config could not be found or might not be unique."
+        config = config.iloc[0]
+
+        train_config["warmstart_config"]["base_model_path"] = Path(
+            warmstart_neps_root_path) / "results" / f"config_{config}" / "output"
 
 
 def neps_training_wrapper(args: argparse.Namespace) -> Callable:
@@ -161,6 +241,10 @@ def neps_training_wrapper(args: argparse.Namespace) -> Callable:
             train_config["model_config"] = model_config
             train_config["block_size"] = model_config["block_size"]
 
+        train_config["mup_base_shape_path"] = Path(args.mup_base_path) if args.mup_base_path is not None else None
+
+        train_config = warmstart_parser(args, train_config)
+
         # Apply all the hyperparameters and constants from the config to the train_config
         for key, value in config.items():
             # Nested dictionaries can be specified by combining the keys of the nested dict with a '.'
@@ -181,6 +265,8 @@ def neps_training_wrapper(args: argparse.Namespace) -> Callable:
         # Resume run from previous fidelity
         if previous_pipeline_directory is not None:
             train_config["load_state_path"] = previous_pipeline_directory / "output"
+
+        warmstart_from_neps(train_config, args.warmstart_neps_root_path)
 
         train_config = TrainConfig(**train_config)
 
