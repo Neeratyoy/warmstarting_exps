@@ -61,7 +61,7 @@ from saws.config.yaml_utils import path_constructor
 from saws import TrainConfig, main
 from neps.optimizers.grid_search.optimizer import GridSearch
 
-from scale_and_warmstart.saws.pretrain import train
+from saws.pretrain import train
 
 
 def set_seed(seed: int):
@@ -112,7 +112,7 @@ def get_args():
     )
     parser.add_argument(
         "--neps_seed",
-        type=str,
+        type=int,
         default=123,
         help="The seed used by the neps optimizer.",
     )
