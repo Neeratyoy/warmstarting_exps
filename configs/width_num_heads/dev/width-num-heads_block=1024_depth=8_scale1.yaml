@@ -2,7 +2,7 @@ bias: true
 block_size: 1024
 max_micro_batch_size:
   l40: 40
-  rtx-2080: 12
+  rtx-2080: 9
 n_embd: 128
 n_head: 2
 n_layer: 8
