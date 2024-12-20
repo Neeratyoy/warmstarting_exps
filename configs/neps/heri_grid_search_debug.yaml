@@ -1,0 +1,9 @@
+pipeline_space:
+  max_train_steps: 1
+  micro_batch_size:
+    choices: [2, 4]
+  max_lr:
+    choices: [0.03, 0.01]
+max_evaluations_total: 4
+overwrite_working_directory: true
+ignore_errors: true
