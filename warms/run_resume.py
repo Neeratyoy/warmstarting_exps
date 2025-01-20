@@ -67,7 +67,7 @@ def main_wrapper(
     ) == 1, "Only one of tokens_per_param, max_tokens, or max_train_steps must be provided."
 
     train_config = update_config(
-        path=Path(path),
+        path=Path(path) if isinstance(path, str) else path,
         tokens_per_param=tokens_per_param,
         max_tokens=max_tokens,
         max_train_steps=max_train_steps,
