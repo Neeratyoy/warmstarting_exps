@@ -1,0 +1,7 @@
+pipeline_space:
+  micro_batch_size:
+    choices: [16, 32, 64, 128, 256, 512, 1024]
+  max_lr:
+    choices: [0.03, 0.01, 0.003, 0.001, 0.0003, 0.0001]
+max_evaluations_total: 42
+ignore_errors: true

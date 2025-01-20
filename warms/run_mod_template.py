@@ -18,31 +18,7 @@ from warms import (
     prepare_data_handler_from_file
 )
 
-
-def warmstart_parser(args: argparse.Namespace, train_config: TrainConfig) -> TrainConfig:
-    if args.warmstart:
-        train_config["warmstart_config"]["activate"] = True
-        train_config["warmstart_config"]["warmstart_type"] = args.warmstart_type
-        if args.base_model_step is not None:
-            if "warmstarting_args" not in train_config["warmstart_config"]:
-                train_config["warmstart_config"]["warmstarting_args"] = {}
-            train_config["warmstart_config"]["warmstarting_args"]["base_model_step"] = args.base_model_step
-
-        if args.warmstart_base_path is not None:
-            train_config["warmstart_config"]["base_model_path"] = args.warmstart_base_path
-        else:
-            assert train_config["warmstart_config"]["base_model_path"] is not None, "Base model path is required for warmstarting."
-
-        if args.shrinking_factor is not None:
-            if "warmstarting_args" not in train_config["warmstart_config"]:
-                train_config["warmstart_config"]["warmstarting_args"] = {}
-            train_config["warmstart_config"]["warmstarting_args"]["shrinking_factor"] = args.shrinking_factor
-        if args.perturbation_sigma is not None:
-            if "warmstarting_args" not in train_config["warmstart_config"]:
-                train_config["warmstart_config"]["warmstarting_args"] = {}
-            train_config["warmstart_config"]["warmstarting_args"]["perturbation_sigma"] = args.perturbation_sigma
-    
-    return train_config
+from warms.utils.support import warmstart_parser
 
 
 def get_args():
@@ -82,14 +58,12 @@ def get_args():
         default=None,
         help="The optimal LR at the base scale"
     )
-
     parser.add_argument(
         "--target_scale",
         type=str,
         default=None,
         help="The path to target scale model config"
     )
-
     parser.add_argument("--warmstart", action="store_true")
     parser.add_argument("--warmstart_type", type=str, default="zeros")
     parser.add_argument("--warmstart_base_path", type=str, default=None)
@@ -108,6 +82,12 @@ def get_args():
         type=str,
         default=None,
         help="The path to the LR schedule yaml file"
+    )
+    parser.add_argument(
+        "--slurm_partition",
+        type=str,
+        default="rtx-2080",
+        help="The SLURM partition to use for the experiment"
     )
 
     return parser.parse_args()
@@ -141,7 +121,12 @@ if __name__ == "__main__":
         if "max_micro_batch_size" in model_config:
             _max_micro_batch_size = model_config.pop("max_micro_batch_size")
             if _max_micro_batch_size is not None:
-                train_config["max_micro_batch_size"] = _max_micro_batch_size
+                if isinstance(_max_micro_batch_size, dict):
+                    train_config["max_micro_batch_size"] = _max_micro_batch_size[args.slurm_partition]
+                elif isinstance(_max_micro_batch_size, int):
+                    train_config["max_micro_batch_size"] = _max_micro_batch_size
+                else:
+                    raise ValueError("Invalid max_micro_batch_size value")
         
         train_config["model_config"] = model_config
         train_config["block_size"] = model_config["block_size"]

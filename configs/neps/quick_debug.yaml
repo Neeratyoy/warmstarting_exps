@@ -1,0 +1,16 @@
+pipeline_space:
+  max_lr:
+    lower: 1e-5
+    upper: 1e-1
+    log: True
+  micro_batch_size: 1
+  max_train_steps: 4
+  early_stopping_max_train_steps:
+    lower: 1
+    upper: 4
+    is_fidelity: true
+overwrite_working_directory: true
+max_evaluations_total: 7
+searcher:
+  strategy: "hyperband"
+  eta: 2

@@ -19,7 +19,7 @@ python = "^3.9, <3.12"
 # Poetry insists on this https://github.com/python-poetry/poetry/issues/8823
 numpy = "^1.0"  # to prevent 2.0 from being installed
 toml = "^0.10.2"
-
+neural-pipeline-search = "^0.12.2"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
