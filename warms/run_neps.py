@@ -154,6 +154,12 @@ def get_args():
                         action='store_true',
                         help='Does grid search instead of the default search.')
 
+    parser.add_argument(
+        "--slurm_partition",
+        type=str,
+        default="rtx-2080",
+        help="The SLURM partition to use for the experiment"
+    )
     args = parser.parse_args()
 
     if (args.warmstart_type is not None
@@ -235,8 +241,12 @@ def neps_training_wrapper(args: argparse.Namespace) -> Callable:
                 model_config = yaml.safe_load(yaml_file)
             if "max_micro_batch_size" in model_config:
                 _max_micro_batch_size = model_config.pop("max_micro_batch_size")
-                if _max_micro_batch_size is not None:
+                if isinstance(_max_micro_batch_size, dict):
+                    train_config["max_micro_batch_size"] = _max_micro_batch_size[args.slurm_partition]
+                elif isinstance(_max_micro_batch_size, int):
                     train_config["max_micro_batch_size"] = _max_micro_batch_size
+                else:
+                    raise ValueError("Invalid max_micro_batch_size value")
 
             train_config["model_config"] = model_config
             train_config["block_size"] = model_config["block_size"]
