@@ -1,11 +1,11 @@
 bias: true
 block_size: 1024
 max_micro_batch_size:
-  l40: 10
-  rtx-2080: 2
-n_embd: 1280
+  l40: 40
+  rtx-2080: 9
+n_embd: 256
 n_head: 8
-n_layer: 8
+n_layer: 3
 n_query_groups: null
 norm_class_name: LayerNorm
 vocab_size: 50257
