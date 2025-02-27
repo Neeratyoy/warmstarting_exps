@@ -1,0 +1,97 @@
+# This is a base shape file encoded in yaml
+# - `null` indicates a dimension is "finite", i.e. a non-"width" dimension
+# - a number indicates the base dimension of an "infinite" dimension, i.e. some notion of "width"
+lm_head.weight:
+- null
+- 16
+transformer.h.0.attn.attn.bias:
+- 48
+transformer.h.0.attn.attn.weight:
+- 48
+- 16
+transformer.h.0.attn.proj.bias:
+- 16
+transformer.h.0.attn.proj.weight:
+- 16
+- 16
+transformer.h.0.mlp.fc.bias:
+- 64
+transformer.h.0.mlp.fc.weight:
+- 64
+- 16
+transformer.h.0.mlp.proj.bias:
+- 16
+transformer.h.0.mlp.proj.weight:
+- 16
+- 64
+transformer.h.0.norm_1.bias:
+- 16
+transformer.h.0.norm_1.weight:
+- 16
+transformer.h.0.norm_2.bias:
+- 16
+transformer.h.0.norm_2.weight:
+- 16
+transformer.h.1.attn.attn.bias:
+- 48
+transformer.h.1.attn.attn.weight:
+- 48
+- 16
+transformer.h.1.attn.proj.bias:
+- 16
+transformer.h.1.attn.proj.weight:
+- 16
+- 16
+transformer.h.1.mlp.fc.bias:
+- 64
+transformer.h.1.mlp.fc.weight:
+- 64
+- 16
+transformer.h.1.mlp.proj.bias:
+- 16
+transformer.h.1.mlp.proj.weight:
+- 16
+- 64
+transformer.h.1.norm_1.bias:
+- 16
+transformer.h.1.norm_1.weight:
+- 16
+transformer.h.1.norm_2.bias:
+- 16
+transformer.h.1.norm_2.weight:
+- 16
+transformer.h.2.attn.attn.bias:
+- 48
+transformer.h.2.attn.attn.weight:
+- 48
+- 16
+transformer.h.2.attn.proj.bias:
+- 16
+transformer.h.2.attn.proj.weight:
+- 16
+- 16
+transformer.h.2.mlp.fc.bias:
+- 64
+transformer.h.2.mlp.fc.weight:
+- 64
+- 16
+transformer.h.2.mlp.proj.bias:
+- 16
+transformer.h.2.mlp.proj.weight:
+- 16
+- 64
+transformer.h.2.norm_1.bias:
+- 16
+transformer.h.2.norm_1.weight:
+- 16
+transformer.h.2.norm_2.bias:
+- 16
+transformer.h.2.norm_2.weight:
+- 16
+transformer.ln_f.bias:
+- 16
+transformer.ln_f.weight:
+- 16
+transformer.wte.weight:
+- null
+- 16

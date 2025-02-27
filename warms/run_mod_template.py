@@ -113,7 +113,7 @@ if __name__ == "__main__":
         with Path(args.lr_schedule_path).open(encoding="utf-8") as yaml_file:
             lr_schedule = yaml.safe_load(yaml_file)
     
-    if args.micro_batch_size is not None:            
+    if args.micro_batch_size is not None:   
         train_config["micro_batch_size"] = args.micro_batch_size
     if args.target_scale is not None:
         with (Path(args.target_scale)).open(encoding="utf-8") as yaml_file:

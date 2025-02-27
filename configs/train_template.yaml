@@ -18,7 +18,7 @@ model_config:
   vocab_size: 50257
 
 mup_base_scales: null
-mup_base_shape_path: /work/dlclarge1/mallik-warmstarting/misc/neeratyoy/code/warmstarting_exps/configs/width_only/dev/mup/width-only_block=1024_depth=6_scale0.bsh
+mup_base_shape_path: null  # /work/dlclarge1/mallik-warmstarting/misc/neeratyoy/code/warmstarting_exps/configs/width_only/dev/mup/width-only_block=1024_depth=6_scale0.bsh
 
 max_lr: 0.03
 min_lr: 0
@@ -67,8 +67,8 @@ tracked_metrics:
   mean_l2_weight_norm: 5
   train_loss: 1
   validation_loss: 1
-  weight_spectra_diff: 100
-  weight_spectra_max: 100
+  weight_spectra_diff: 1000
+  weight_spectra_max: 1000
   z_loss: 5
 
 max_tokens: null
