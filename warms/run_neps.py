@@ -70,8 +70,6 @@ from neps.optimizers.grid_search.optimizer import GridSearch
 
 from warms.utils.support import warmstart_parser
 
-from scale_and_warmstart.saws.pretrain import train
-
 
 def set_seed(seed: int):
     torch.manual_seed(seed)
