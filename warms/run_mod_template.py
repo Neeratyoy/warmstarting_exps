@@ -159,8 +159,12 @@ if __name__ == "__main__":
             train_config[key] = value
 
     train_config["seed"] = args.seed
-    train_config = TrainConfig(**train_config)
+    
+    _strategy = args.ddp_strategy if args.ddp else "auto"
+    fabric = L.Fabric(accelerator="auto", devices="auto", strategy=_strategy)
+    train_config["devices"] = fabric.world_size
 
+    train_config = TrainConfig(**train_config)
     data_config = prepare_data_handler_from_file(
         data_config_path=canvas.data_handler_root / DATASET_MAP(args.dataset),
         train_config=train_config,
@@ -168,9 +172,6 @@ if __name__ == "__main__":
     )
 
     # Running
-    _strategy = args.ddp_strategy if args.ddp else "auto"
-    fabric = L.Fabric(accelerator="auto", devices="auto", strategy=_strategy)
-
     result_dict = main(
         fabric=fabric,
         data=data_config,
