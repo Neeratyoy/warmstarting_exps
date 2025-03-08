@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 from pprint import pprint
+import  yaml
 
 import lightning as L
 
@@ -82,11 +83,15 @@ if __name__ == "__main__":
 
     # Loading the training configuration
     # if no arguments are passed, the default training template is used from the experiment canvas
-    train_config = TrainConfig.from_path(
+    _train_template_path=(
         args.train_config_path
         if args.train_config_path is not None
         else canvas.train_template
     )
+    with open(_train_template_path, "rb") as f:
+        train_config_dict = yaml.safe_load(f)
+    train_config_dict["devices"] = fabric.world_size
+    train_config = TrainConfig(**train_config_dict)
 
     # Load the data configuration
     data_config = prepare_data_handler_from_file(

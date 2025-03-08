@@ -6,6 +6,8 @@ dataset="slimpajama"
 name="neeratyoy"  # load the relevant canvas settings
 exp_tree="test_run/slimpajama/ddp"  # change the experiment subdirectory name
 
+source /work/dlclarge1/mallik-warmstarting/setup_script.sh nypy_env /work/dlclarge1/mallik-warmstarting/envs/
+
 python ${base_path}"warms/run_mod_template.py" \
     --canvas_access $name \
     --output_tree $exp_tree \
@@ -16,7 +18,7 @@ python ${base_path}"warms/run_mod_template.py" \
     --base_lr 0.003 \
     --micro_batch_size 64 \
     --slurm_partition l40 \
-    --mup_base "/work/dlclarge1/mallik-warmstarting/misc/neeratyoy/code/warmstarting_exps/configs/width_num_heads/dev/mup/width-num-heads_block=1024_depth=8_scale0.bsh" #\
+    --mup_base "/work/dlclarge1/mallik-warmstarting/misc/neeratyoy/code/warmstarting_exps/configs/width_num_heads/dev/mup/width-num-heads_block=1024_depth=8_scale0.bsh" # \
     # --ddp /
     # --ddp_strategy "ddp"
 # end of file
