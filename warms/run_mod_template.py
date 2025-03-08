@@ -87,9 +87,22 @@ def get_args():
         "--slurm_partition",
         type=str,
         default="rtx-2080",
+        choices=["rtx-2080", "l40"],
         help="The SLURM partition to use for the experiment"
     )
 
+    parser.add_argument(
+        "--ddp",
+        action="store_true",
+        help="Activate DDP explicitly."
+    )
+    parser.add_argument(
+        "--ddp_strategy",
+        type=str,
+        default="ddp",
+        choices=["ddp", "ddp2", "ddp_spawn", "deepspeed"],
+        help="The DDP strategy to use. Requires `--ddp` to be set."
+    )
     return parser.parse_args()
 
 
@@ -155,7 +168,9 @@ if __name__ == "__main__":
     )
 
     # Running
-    fabric = L.Fabric(devices="auto", strategy="auto")
+    _strategy = args.ddp_strategy if args.ddp else "auto"
+    fabric = L.Fabric(accelerator="auto", devices="auto", strategy=_strategy)
+
     result_dict = main(
         fabric=fabric,
         data=data_config,

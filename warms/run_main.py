@@ -46,6 +46,17 @@ def get_args() -> argparse.Namespace:
         default=None,
         help="Training configuration file."
     )
+    parser.add_argument(
+        "--ddp",
+        action="store_true",
+        help="Activate DDP explicitly."
+    )
+    parser.add_argument(
+        "--devices",
+        type=int,
+        default=1,
+        help="Number of GPU devices to use."
+    )
     # TODO: implement the feature below,
     # parser.add_argument(
     #     "--update_train_template",
@@ -62,8 +73,9 @@ def get_args() -> argparse.Namespace:
 
 if __name__ == "__main__":
     args = get_args()
-
-    # if args.update_train_template:  # TODO: Implement this
+    
+    _strategy = "ddp" if args.ddp else "auto"
+    fabric = L.Fabric(accelerator="auto", devices="auto", strategy=_strategy)
 
     # Setting experiment canvas for path management
     canvas = ExpCanvas(CANVAS_BASE_PATH, args.canvas_access)
@@ -87,7 +99,6 @@ if __name__ == "__main__":
     pprint(train_config)
 
     # Interfacing `saws` (litgpt wrapper) for pretraining
-    fabric = L.Fabric(devices="auto", strategy="auto")
     result_dict = main(
         fabric=fabric,
         data=data_config,
