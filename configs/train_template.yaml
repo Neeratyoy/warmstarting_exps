@@ -20,7 +20,7 @@ model_config:
 mup_base_scales: null
 mup_base_shape_path: null  # /work/dlclarge1/mallik-warmstarting/misc/neeratyoy/code/warmstarting_exps/configs/width_only/dev/mup/width-only_block=1024_depth=6_scale0.bsh
 
-max_lr: 0.03
+max_lr: 0.003
 min_lr: 0
 adam_beta_1: 0.9
 adam_beta_2: 0.95
