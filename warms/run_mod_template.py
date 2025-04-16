@@ -70,7 +70,13 @@ def get_args():
     parser.add_argument("--base_model_step", type=int, default=None)
     parser.add_argument("--shrinking_factor", type=float, default=None)
     parser.add_argument("--perturbation_sigma", type=float, default=None)
-    parser.add_argument("--seed", type=int, default=444, help="The seed for the experiment")
+    parser.add_argument("--seed", type=int, default=444, help="The seed for the experiment")    
+    parser.add_argument(
+        "--max_micro_batch_size",
+        type=int,
+        default=None,
+        help="The max micro batch size for the base scale"
+    )    
     parser.add_argument(
         "--micro_batch_size",
         type=int,
@@ -109,8 +115,8 @@ def get_args():
 if __name__ == "__main__":
     args = get_args()
 
-    if hasattr(args, "base_lr"):
-        assert hasattr(args, "mup_base"), "MuP base file path is required for when using base LR."
+    # if hasattr(args, "base_lr"):
+    #     assert hasattr(args, "mup_base"), "MuP base file path is required for when using base LR."
     if hasattr(args, "mup_base"):
         assert hasattr(args, "base_lr"), "Base LR is required for when using MuP base file."
 
@@ -128,18 +134,24 @@ if __name__ == "__main__":
     
     if args.micro_batch_size is not None:   
         train_config["micro_batch_size"] = args.micro_batch_size
+    if args.max_micro_batch_size is not None:
+        train_config["max_micro_batch_size"] = args.max_micro_batch_size
     if args.target_scale is not None:
         with (Path(args.target_scale)).open(encoding="utf-8") as yaml_file:
             model_config = yaml.safe_load(yaml_file)
         if "max_micro_batch_size" in model_config:
             _max_micro_batch_size = model_config.pop("max_micro_batch_size")
-            if _max_micro_batch_size is not None:
-                if isinstance(_max_micro_batch_size, dict):
-                    train_config["max_micro_batch_size"] = _max_micro_batch_size[args.slurm_partition]
-                elif isinstance(_max_micro_batch_size, int):
-                    train_config["max_micro_batch_size"] = _max_micro_batch_size
-                else:
-                    raise ValueError("Invalid max_micro_batch_size value")
+            if args.max_micro_batch_size is not None:
+                train_config["max_micro_batch_size"] = args.max_micro_batch_size
+                print("WARNING: `max_micro_batch_size` provided; overriding model `max_micro_batch_size`")
+            else:
+                if _max_micro_batch_size is not None:
+                    if isinstance(_max_micro_batch_size, dict):
+                        train_config["max_micro_batch_size"] = _max_micro_batch_size[args.slurm_partition]
+                    elif isinstance(_max_micro_batch_size, int):
+                        train_config["max_micro_batch_size"] = _max_micro_batch_size
+                    else:
+                        raise ValueError("Invalid max_micro_batch_size value")
         
         train_config["model_config"] = model_config
         train_config["block_size"] = model_config["block_size"]
@@ -162,7 +174,7 @@ if __name__ == "__main__":
     
     _strategy = args.ddp_strategy if args.ddp else "auto"
     fabric = L.Fabric(accelerator="auto", devices="auto", strategy=_strategy)
-    train_config["devices"] = fabric.world_size
+    train_config.update({"devices": fabric.world_size})
 
     train_config = TrainConfig(**train_config)
     data_config = prepare_data_handler_from_file(
