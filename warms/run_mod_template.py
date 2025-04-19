@@ -35,7 +35,7 @@ def get_args():
         type=str,
         default="wikitext",
         help="Dataset choice",
-        choices=["wikitext", "slimpajama"]
+        choices=["wikitext", "slimpajama", "slimpajama627B"]
     )
     parser.add_argument(
         "--output_tree",
