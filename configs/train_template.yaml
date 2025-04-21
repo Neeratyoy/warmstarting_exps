@@ -26,11 +26,11 @@ adam_beta_1: 0.9
 adam_beta_2: 0.95
 adam_eps: 1.0e-08
 
-warmup_fraction: 0.
+warmup_fraction: 0.01
 scheduler_type: constant
 scheduler_args: null
 scheduler_lr_decay_factor: 0.1
-cooldown_fraction: 0.
+cooldown_fraction: 0.2
 cooldown_type: linear
 cooldown_lr_decay_factor: 0.
 
@@ -52,24 +52,24 @@ clip_max_val: null
 
 global_log_step: 1
 tracked_metrics:
-  gradient_norm_per_layer: 5
-  l1_norm_per_layer: 5
-  l2_norm_per_layer: 5
-  l1_norm_activations_per_layer: 5
+  # gradient_norm_per_layer: 5
+  # l1_norm_per_layer: 5
+  # l2_norm_per_layer: 5
+  # l1_norm_activations_per_layer: 5
   learning_rate: 1
-  max_attention_logits_all: 5
-  max_attention_logits_per_layer: 5
-  optimizer_stats: 5
+  # max_attention_logits_all: 5
+  # max_attention_logits_per_layer: 5
+  # optimizer_stats: 5
   output_logits_max: 5
   output_logits_mean: 5
-  total_gradient_norm: 5
-  mean_l1_weight_norm: 5
-  mean_l2_weight_norm: 5
+  # total_gradient_norm: 5
+  # mean_l1_weight_norm: 5
+  # mean_l2_weight_norm: 5
   train_loss: 1
   validation_loss: 1
-  weight_spectra_diff: 1000
-  weight_spectra_max: 1000
-  z_loss: 5
+  # weight_spectra_diff: 1000
+  # weight_spectra_max: 1000
+  # z_loss: 5
 
 max_tokens: null
 tokens_per_param: 20
