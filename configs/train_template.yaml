@@ -1,7 +1,7 @@
 warmstart_config_path: null
 warmstart_config:
   activate: false
-  base_model_path: /work/dlclarge1/mallik-warmstarting/warmstarting_exps/results/shitty_draft/slimpajama/block=1024_depth=6/baseline/sp/constLR/scale0
+  base_model_path: null
   warmstart_type: snp_zeros
   warmstarting_args: null
   restart_dataloader: false
@@ -18,7 +18,7 @@ model_config:
   vocab_size: 50257
 
 mup_base_scales: null
-mup_base_shape_path: null  # /work/dlclarge1/mallik-warmstarting/misc/neeratyoy/code/warmstarting_exps/configs/width_only/dev/mup/width-only_block=1024_depth=6_scale0.bsh
+mup_base_shape_path: null
 
 max_lr: 0.003
 min_lr: 0
@@ -26,16 +26,13 @@ adam_beta_1: 0.9
 adam_beta_2: 0.95
 adam_eps: 1.0e-08
 
-warmup_fraction: 0.
+warmup_fraction: 0.01
 scheduler_type: constant
 scheduler_args: null
 scheduler_lr_decay_factor: 0.1
-cooldown_fraction: 0.
+cooldown_fraction: 0.2
 cooldown_type: linear
 cooldown_lr_decay_factor: 0.
-
-# parameterization_type: null
-# parameterization_full_align: false
 
 independent_wd: true
 weight_decay: 0
@@ -43,7 +40,7 @@ weight_init_type: null
 z_loss_eps: null
 
 devices: 1
-micro_batch_size: 260
+micro_batch_size: 10
 accumulation_iters: 1
 max_micro_batch_size: 10
 
@@ -52,24 +49,24 @@ clip_max_val: null
 
 global_log_step: 1
 tracked_metrics:
-  gradient_norm_per_layer: 5
-  l1_norm_per_layer: 5
-  l2_norm_per_layer: 5
-  l1_norm_activations_per_layer: 5
+  # gradient_norm_per_layer: 5
+  # l1_norm_per_layer: 5
+  # l2_norm_per_layer: 5
+  # l1_norm_activations_per_layer: 5
   learning_rate: 1
-  max_attention_logits_all: 5
-  max_attention_logits_per_layer: 5
-  optimizer_stats: 5
+  # max_attention_logits_all: 5
+  # max_attention_logits_per_layer: 5
+  # optimizer_stats: 5
   output_logits_max: 5
   output_logits_mean: 5
-  total_gradient_norm: 5
-  mean_l1_weight_norm: 5
-  mean_l2_weight_norm: 5
+  # total_gradient_norm: 5
+  # mean_l1_weight_norm: 5
+  # mean_l2_weight_norm: 5
   train_loss: 1
   validation_loss: 1
-  weight_spectra_diff: 1000
-  weight_spectra_max: 1000
-  z_loss: 5
+  # weight_spectra_diff: 1000
+  # weight_spectra_max: 1000
+  # z_loss: 5
 
 max_tokens: null
 tokens_per_param: 20
@@ -78,10 +75,12 @@ max_val_steps: 25
 validate_every: 10
 
 save_state_path: null
-load_state_path: null  # /work/dlclarge1/mallik-warmstarting/warmstarting_exps/results/test_run/data_resume/mup_s0_s2
+load_state_path: null
 # NOTE: when loading a checkpoint from above, the below arguments are overwritten by the checkpoint
 update_every_k: 10  # updates the checkpoints with the same name
 save_every_k: null  # saves a new checkpoint state with a step added to name
 save_total_k: null  # saves a total of k checkpoints given the training steps, overriding the above two
+save_step_list: null
+save_wsd: true
 
 seed: 444
