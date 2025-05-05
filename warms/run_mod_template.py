@@ -33,9 +33,9 @@ def get_args():
     parser.add_argument(
         "--dataset",
         type=str,
-        default="wikitext",
+        default="slimpajama",
         help="Dataset choice",
-        choices=["wikitext", "slimpajama"]
+        choices=["wikitext", "slimpajama", "slimpajama-small"]
     )
     parser.add_argument(
         "--output_tree",

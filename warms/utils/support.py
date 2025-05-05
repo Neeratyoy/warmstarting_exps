@@ -34,8 +34,13 @@ def prepare_data_handler_from_file(
         data_config.seed = seed if seed is not None else data_config.seed
         data_config.block_size = block_size
         return data_config
-    
+   
     data_config = DataHandler.from_path(data_config_path)
+    if data_config.hf_dataset_id is None:
+        data_config.seed = train_config.seed
+        data_config.root_data_path = root_data_path / data_config.root_data_path
+        return data_config
+
     data_config = _postprocess_data_handler(
         data_config,
         root_data_path,
