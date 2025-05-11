@@ -25,6 +25,7 @@ min_lr: 0
 adam_beta_1: 0.9
 adam_beta_2: 0.95
 adam_eps: 1.0e-08
+use_global_learning_rate: false
 
 warmup_fraction: 0.01
 scheduler_type: constant

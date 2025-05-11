@@ -70,6 +70,7 @@ def get_args():
     parser.add_argument("--base_model_step", type=int, default=None)
     parser.add_argument("--shrinking_factor", type=float, default=None)
     parser.add_argument("--perturbation_sigma", type=float, default=None)
+    parser.add_argument("--use_global_learning_rate", action="store_true", help="Use global learning rate for opt")
     parser.add_argument("--seed", type=int, default=444, help="The seed for the experiment")    
     parser.add_argument(
         "--max_micro_batch_size",
@@ -161,6 +162,10 @@ if __name__ == "__main__":
         train_config["max_lr"] = args.base_lr  # crucial for muP to work properly
     if args.mup_base is not None:
         train_config["mup_base_shape_path"] = Path(args.mup_base)
+
+    # adjusting for global learning rate
+    if args.use_global_learning_rate:
+        train_config["use_global_learning_rate"] = True
 
     # adjusting for warmstarting
     train_config = warmstart_parser(args, train_config)
