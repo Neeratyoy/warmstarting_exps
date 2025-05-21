@@ -9,7 +9,8 @@ import seaborn as sns
 
 from scripts.plot_successive_schedule import plot_warmstarting_schedules
 from scripts.plot_tokens_vs_flops import plot_tokens_vs_flops
-
+from scripts.plot_test import plot_test
+from scripts.plot_lighteval import plot_lighteval
 
 def plot_grid(config_file: str | Path):
     with open(config_file, "r") as f:
@@ -79,6 +80,12 @@ def plot_grid(config_file: str | Path):
             plot_tokens_vs_flops(ax=ax, **plotting_function_args)
         elif ax_config['function'] == 'plot_warmstarting_schedules':
             plot_warmstarting_schedules(ax=ax, **plotting_function_args)
+        elif ax_config['function'] == 'plot_test':
+            plot_test(ax=ax, **plotting_function_args)
+        elif ax_config['function'] == 'plot_lighteval':
+            plot_lighteval(ax=ax, **plotting_function_args)
+        else:
+            raise ValueError(f"Unknown plotting function: {ax_config['function']}")
 
     if global_xlabel is not None:
         # fig.supxlabel(global_xlabel)
