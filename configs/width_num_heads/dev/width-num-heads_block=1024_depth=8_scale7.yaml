@@ -1,0 +1,11 @@
+bias: true
+block_size: 1024
+max_micro_batch_size:
+  l40: 6
+  rtx-2080: null
+n_embd: 3072
+n_head: 48
+n_layer: 8
+n_query_groups: null
+norm_class_name: LayerNorm
+vocab_size: 50257
