@@ -158,6 +158,19 @@ def get_args():
         default="rtx-2080",
         help="The SLURM partition to use for the experiment"
     )
+    # DDP arguments
+    parser.add_argument(
+        "--ddp",
+        action="store_true",
+        help="Activate DDP explicitly."
+    )
+    parser.add_argument(
+        "--ddp_strategy",
+        type=str,
+        default="ddp",
+        choices=["ddp", "ddp2", "ddp_spawn", "deepspeed"],
+        help="The DDP strategy to use. Requires `--ddp` to be set."
+    )
     args = parser.parse_args()
 
     if (args.warmstart_type is not None
@@ -201,7 +214,7 @@ def warmstart_from_neps(train_config: dict, warmstart_neps_root_path: str):
         row_selection = reduce(lambda x, y: x & y, row_selection)
         config = summary["config_id"][row_selection]
 
-        assert len(config) == 1, "The warmstart config could not be found or might not be unique."
+        assert len(config) == 1, f"The warmstart config could not be found or might not be unique. Configs: {config}"
         config = config.iloc[0]
 
         train_config["warmstart_config"]["base_model_path"] = Path(
@@ -251,8 +264,6 @@ def neps_training_wrapper(args: argparse.Namespace) -> Callable:
 
         train_config["mup_base_shape_path"] = Path(args.mup_base_path) if args.mup_base_path is not None else None
 
-        train_config = warmstart_parser(args, train_config)
-
         # Apply all the hyperparameters and constants from the config to the train_config
         for key, value in config.items():
             # Nested dictionaries can be specified by combining the keys of the nested dict with a '.'
@@ -274,7 +285,12 @@ def neps_training_wrapper(args: argparse.Namespace) -> Callable:
         if previous_pipeline_directory is not None:
             train_config["load_state_path"] = previous_pipeline_directory / "output"
 
+        _strategy = args.ddp_strategy if args.ddp else "auto"
+        fabric = L.Fabric(accelerator="auto", devices="auto", strategy=_strategy)
+        train_config.update({"devices": fabric.world_size})
+
         warmstart_from_neps(train_config, args.warmstart_neps_root_path)
+        train_config = warmstart_parser(args, train_config)
 
         train_config = TrainConfig(**train_config)
 
@@ -284,7 +300,6 @@ def neps_training_wrapper(args: argparse.Namespace) -> Callable:
             root_data_path=canvas.data_root
         )
 
-        fabric = L.Fabric(devices="auto", strategy="auto")
         run_metrics = main(
             fabric=fabric,
             data=data_config,
