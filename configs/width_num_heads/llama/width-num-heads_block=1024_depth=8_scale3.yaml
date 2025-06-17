@@ -1,0 +1,13 @@
+bias: false
+block_size: 1024
+max_micro_batch_size:
+  l40: 29
+  rtx-2080: 7
+n_embd: 512
+n_head: 8
+n_layer: 8
+intermediate_size: 1536       # ceil(512*8/3) → 1365.3 → 1536
+n_query_groups: null
+norm_class_name: RMSNorm
+mlp_class_name: LLaMAMLP
+vocab_size: 50257
