@@ -110,6 +110,12 @@ def get_args():
         choices=["ddp", "ddp2", "ddp_spawn", "deepspeed"],
         help="The DDP strategy to use. Requires `--ddp` to be set."
     )
+    parser.add_argument(
+        "--num_workers_data_loader",
+        type=int,
+        default=1,
+        help="Number of workers for the data loader. Set to 0 for no multiprocessing (fixes pickling error in wikitext)."
+    )
     return parser.parse_args()
 
 
@@ -132,7 +138,10 @@ if __name__ == "__main__":
     if args.lr_schedule_path:
         with Path(args.lr_schedule_path).open(encoding="utf-8") as yaml_file:
             lr_schedule = yaml.safe_load(yaml_file)
-    
+
+    if args.num_workers_data_loader is not None:
+        train_config["num_workers_data_loader"] = args.num_workers_data_loader
+
     if args.micro_batch_size is not None:   
         train_config["micro_batch_size"] = args.micro_batch_size
     if args.max_micro_batch_size is not None:
