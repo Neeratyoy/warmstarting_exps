@@ -103,6 +103,19 @@ def get_args():
         action="store_true",
         help="Activate DDP explicitly."
     )
+
+    parser.add_argument(
+        "--devices",
+        type=int,
+        default=None,
+        help="Devices to pick up for training."
+    )    
+    parser.add_argument(
+        "--num_nodes",
+        type=int,
+        default=1,
+        help="Devices to pick up for training."
+    )
     parser.add_argument(
         "--ddp_strategy",
         type=str,
@@ -178,8 +191,17 @@ if __name__ == "__main__":
     train_config["seed"] = args.seed
     
     _strategy = args.ddp_strategy if args.ddp else "auto"
-    fabric = L.Fabric(accelerator="auto", devices="auto", strategy=_strategy)
+    fabric = L.Fabric(
+        accelerator="auto",
+        devices="auto" if args.devices is None else int(args.devices),
+        # num_nodes=args.num_nodes,
+        strategy=_strategy
+    )
     train_config.update({"devices": fabric.world_size})
+
+    print("=" * 50)
+    print(vars(fabric))
+    print("=" * 50)
 
     train_config = TrainConfig(**train_config)
     data_config = prepare_data_handler_from_file(
