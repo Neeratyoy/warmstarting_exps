@@ -69,12 +69,13 @@ def warmstart_parser(args: argparse.Namespace, train_config: dict) -> dict:
                        "base_model_path"] is not None, "Base model path is required for warmstarting."
 
         # Hyperparameters for warmstarting methods
+        warmstarting_args = train_config["warmstart_config"].get("warmstarting_args")
         if args.shrinking_factor is not None:
-            if "warmstarting_args" not in train_config["warmstart_config"]:
+            if not isinstance(warmstarting_args, dict):
                 train_config["warmstart_config"]["warmstarting_args"] = {}
             train_config["warmstart_config"]["warmstarting_args"]["shrinking_factor"] = args.shrinking_factor
         if args.perturbation_sigma is not None:
-            if "warmstarting_args" not in train_config["warmstart_config"]:
+            if not isinstance(warmstarting_args, dict):
                 train_config["warmstart_config"]["warmstarting_args"] = {}
             train_config["warmstart_config"]["warmstarting_args"]["perturbation_sigma"] = args.perturbation_sigma
 
