@@ -28,15 +28,15 @@ def update_config(
     config.save_state_path = deepcopy(path)
     config.load_state_path = deepcopy(path) if not overwrite else None
     if tokens_per_param is not None:
-        if tokens_per_param < config.tokens_per_param:
+        if config.tokens_per_param is not None and tokens_per_param < config.tokens_per_param:
             raise ValueError(f"tokens_per_param must be greater than or equal to {config.tokens_per_param}")
         config.tokens_per_param = tokens_per_param
     if max_tokens is not None:
-        if max_tokens < config.max_tokens:
+        if config.max_tokens is not None and max_tokens < config.max_tokens:
             raise ValueError(f"max_tokens must be greater than or equal to {config.max_tokens}")
         config.max_tokens = max_tokens
     if max_train_steps is not None:
-        if max_train_steps < config.max_train_steps:
+        if config.max_train_steps is not None and max_train_steps < config.max_train_steps:
             raise ValueError(f"max_train_steps must be greater than or equal to {config.max_train_steps}")
         config.max_train_steps = max_train_steps
     if overwrite:

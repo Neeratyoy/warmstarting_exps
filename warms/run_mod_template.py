@@ -94,8 +94,14 @@ def get_args():
         "--slurm_partition",
         type=str,
         default="rtx-2080",
-        choices=["rtx-2080", "l40"],
+        choices=["rtx-2080", "l40", "h200"],
         help="The SLURM partition to use for the experiment"
+    )
+    parser.add_argument(
+        "--tokens_per_param",
+        type=float,
+        default=None,
+        help="Sets the tokens/param budget if specified"
     )
 
     parser.add_argument(
@@ -178,6 +184,10 @@ if __name__ == "__main__":
         
         train_config["model_config"] = model_config
         train_config["block_size"] = model_config["block_size"]
+
+    # adjusting for total budget
+    if args.tokens_per_param is not None:
+        train_config["tokens_per_param"] = args.tokens_per_param
 
     # adjusting for muP
     if args.base_lr is not None:

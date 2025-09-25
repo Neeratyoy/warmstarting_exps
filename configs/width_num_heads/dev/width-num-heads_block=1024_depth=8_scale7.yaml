@@ -3,6 +3,7 @@ block_size: 1024
 max_micro_batch_size:
   l40: 6
   rtx-2080: null
+  h200: 12
 n_embd: 3072
 n_head: 48
 n_layer: 8
