@@ -6,7 +6,7 @@ from matplotlib import pyplot as plt
 import seaborn as sns
 from litgpt.utils import num_parameters
 from litgpt.config import Config
-from saws.model import GPT_Scales
+from saws.model.model import build_model
 
 SCALE_CONFIG_FILE = lambda block, depth, scale: (
     f"width-only_block={block}_depth={depth}_scale{scale}.yaml"
@@ -29,7 +29,7 @@ def get_number_of_model_parameters(model_root: Path, block: int, depth: int, sca
         model_config = yaml.safe_load(yaml_file)
         model_config.pop("max_micro_batch_size")
     model_config = Config(**model_config)
-    return num_parameters(GPT_Scales(model_config), requires_grad=True)
+    return num_parameters(build_model(model_config), requires_grad=True)
 
 def calculate_token_per_param(tokens_per_param_target_model: int | float,
                               scale_weighting: list[float],
