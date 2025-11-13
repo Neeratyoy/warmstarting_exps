@@ -66,6 +66,7 @@ def get_args():
     )
     parser.add_argument("--warmstart", action="store_true")
     parser.add_argument("--warmstart_type", type=str, default="zeros")
+    parser.add_argument("--depth_warmstart_type", type=str, default="stacking")
     parser.add_argument("--warmstart_base_path", type=str, default=None)
     parser.add_argument("--base_model_step", type=int, default=None)
     parser.add_argument("--shrinking_factor", type=float, default=None)

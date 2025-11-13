@@ -57,6 +57,14 @@ def warmstart_parser(args: argparse.Namespace, train_config: dict) -> dict:
         if args.warmstart_type is not None:
             train_config["warmstart_config"]["warmstart_type"] = args.warmstart_type
 
+        if getattr(args, "depth_warmstart_type", None) is not None:
+            if "warmstart_config" not in train_config:
+                train_config["warmstart_config"] = {}
+            train_config["warmstart_config"]["depth_warmstart_type"] = (
+                None if str(args.depth_warmstart_type).lower() == "none"
+                else args.depth_warmstart_type
+            )
+
         if args.base_model_step is not None:
             if "warmstarting_args" not in train_config["warmstart_config"]:
                 train_config["warmstart_config"]["warmstarting_args"] = {}
