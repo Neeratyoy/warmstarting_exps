@@ -51,14 +51,14 @@ clip_max_val: null
 
 global_log_step: 1
 tracked_metrics:
-  # gradient_norm_per_layer: 5
-  # l1_norm_per_layer: 5
-  # l2_norm_per_layer: 5
+  gradient_norm_per_layer: 25
+  l1_norm_per_layer: 25
+  l2_norm_per_layer: 25
   # l1_norm_activations_per_layer: 5
   learning_rate: 1
   # max_attention_logits_all: 5
   # max_attention_logits_per_layer: 5
-  # optimizer_stats: 5
+  optimizer_stats: 25
   output_logits_max: 5
   output_logits_mean: 5
   # total_gradient_norm: 5
@@ -69,6 +69,9 @@ tracked_metrics:
   # weight_spectra_diff: 1000
   # weight_spectra_max: 1000
   # z_loss: 5
+  effective_rank_per_layer: 10
+  # dead_neurons: 10
+  # hessian_stats: 100
 
 max_tokens: null
 tokens_per_param: 20

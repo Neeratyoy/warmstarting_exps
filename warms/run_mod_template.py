@@ -59,6 +59,12 @@ def get_args():
         help="The optimal LR at the base scale"
     )
     parser.add_argument(
+        "--weight_decay",
+        type=float,
+        default=None,
+        help="The weight decay for the optimizer"
+    )
+    parser.add_argument(
         "--target_scale",
         type=str,
         default=None,
@@ -135,6 +141,13 @@ def get_args():
         default=1,
         help="Number of workers for the data loader. Set to 0 for no multiprocessing (fixes pickling error in wikitext)."
     )
+
+
+    parser.add_argument(
+        "--analysis",
+        action="store_true",
+        help="Activate analysis mode."
+    )
     return parser.parse_args()
 
 
@@ -194,6 +207,9 @@ if __name__ == "__main__":
         train_config["max_lr"] = args.base_lr  # crucial for muP to work properly
     if args.mup_base is not None:
         train_config["mup_base_shape_path"] = Path(args.mup_base)
+    
+    if args.weight_decay is not None:
+        train_config["weight_decay"] = args.weight_decay # not muP-specific but useful to have as an argument
 
     # adjusting for global learning rate
     if args.use_global_learning_rate:
@@ -230,6 +246,10 @@ if __name__ == "__main__":
     )
 
     # Running
+    if args.analysis:
+        print("Running in analysis mode.")
+        from saws.pretrain_for_analysis import main
+
     result_dict = main(
         fabric=fabric,
         data=data_config,
