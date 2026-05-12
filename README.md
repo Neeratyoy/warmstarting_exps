@@ -1,5 +1,9 @@
 # warmstarting_exps
 
+### Overview
+
+This repo contains the experiment wrappers for the paper `When is Warmstarting Effective for Scaling Language Models?` that jointly interface the following supporting code:
+[Warmstarting and LLM code](https://github.com/automl/scale_and_warmstart/tree/main) | [Synthetic MLP code](https://github.com/JohannesHog/mlp_scaling/tree/main) | [Scaling Law code](https://github.com/Neeratyoy/EffingScaling/tree/warmstarting26)
 
 ### Installations
 
