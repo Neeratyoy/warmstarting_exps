@@ -74,7 +74,7 @@ max_tokens: null
 tokens_per_param: 20
 max_train_steps: null
 max_val_steps: 25
-validate_every: 10
+validate_every: 25
 
 save_state_path: null
 load_state_path: null
