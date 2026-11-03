@@ -2,7 +2,9 @@
 
 ### Overview
 
-This repo contains the experiment wrappers for the paper [When is Warmstarting Effective for Scaling Language Models?](https://arxiv.org/pdf/2605.13405) that jointly interface the following supporting code: 
+This repo contains the experiment wrappers for the NeurIPS '26 paper [When is Warmstarting Effective for Scaling Language Models?](https://arxiv.org/pdf/2605.13405) [[cite us](#cite-us)] 
+
+The overall setup jointly interfaces with the following repositories: 
 
 [Warmstarting and LLM code](https://github.com/automl/scale_and_warmstart/tree/main) | [Synthetic MLP code](https://github.com/JohannesHog/mlp_scaling/tree/main) | [Scaling Law code](https://github.com/Neeratyoy/EffingScaling/tree/warmstarting26)
 
@@ -101,3 +103,16 @@ This will trigger the download and preprocessing (assuming _huggingface_ data).
 Update the `.toml` file in the format of [`*_exp_canvas.toml`](configs/meta_exp_canvas.toml).
 Note that any sub-user can only redefine variables that have been defined in `global`.
 In order to enforce _Path()_ type-casting of path variables, the corresponding key should have at least one of _root_, _dir_, or _path_ in its name.
+
+
+## Cite Us
+```bib
+@inproceedings{
+    mallik-neurips26a,
+    title={When is Warmstarting Effective for Scaling Language Models?},
+    author={Neeratyoy Mallik and Maciej Janowski and Johannes Hog and Herilalaina Rakotoarison and Josif Grabocka and Frank Hutter and Aaron Klein},
+    booktitle={The Fortieth Annual Conference on Neural Information Processing Systems (NeurIPS)},
+    year={2026},
+    url={https://openreview.net/forum?id=VyDwjNRtd2}
+}
+```
